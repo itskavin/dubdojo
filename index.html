@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DubDojo</title>
+  <meta name="description" content="DubDojo: dub movie, series and anime scenes with your own voice, get timing scores, and play branching voiced stories.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="scenes.css">
+</head>
+<body>
+  <header class="top">
+    <h1><span class="logo">🎬</span> DubDojo</h1>
+    <nav id="tabs">
+      <button data-tab="scenes">🎬 Dub Scenes</button>
+      <span class="nav-group" aria-hidden="true">Story mode</span>
+      <button data-tab="play">▶ Play</button>
+      <button data-tab="dub">● Dub</button>
+      <button data-tab="edit">✎ Edit</button>
+      <button data-tab="packs">📦 Voice Packs</button>
+    </nav>
+  </header>
+  <main id="view"></main>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <div id="dl" hidden><span></span><i></i></div>
+  <script src="voices.js"></script>
+  <script src="app.js"></script>
+  <script src="scenes.js"></script>
+</body>
+</html>
