@@ -65,9 +65,9 @@ test('ignores unrelated files and refuses empty captions', async () => {
 test('already cancelled imports never create a converter worker', async () => {
   await assert.rejects(convert({}, { signal: AbortSignal.abort() }), { name: 'AbortError' });
 });
-function studio(saved = []) {
+function studio(saved = [], overrides = {}) {
   const g = { window: {}, store: { get: () => saved, set() {} }, uid: p => p + 'test',
-    document: { addEventListener() {} }, ROUTES: {}, Blob, TextEncoder, TextDecoder, Response, DecompressionStream };
+    document: { addEventListener() {} }, ROUTES: {}, Blob, TextEncoder, TextDecoder, Response, DecompressionStream, ...overrides };
   vm.runInNewContext(fs.readFileSync(require('node:path').join(__dirname, '../scenes.js'), 'utf8'), g);
   return g.window.DubStudio;
 }
@@ -108,4 +108,17 @@ test('converter progress and errors reach the importer and release the worker', 
   worker.onmessage({ data: { op: 'error', error: 'Invalid video' } });
   await assert.rejects(job, /Invalid video/);
   assert.deepEqual(updates, ['Converting… 50%']); assert.equal(worker.terminated, true);
+});
+
+test('failed imports show the full error in a persistent dialog', async () => {
+  const modals = [], notices = [];
+  const node = (tag, props = {}, ...kids) => ({ tag, props, kids, isConnected: true,
+    append(...next) { this.kids.push(...next); }, replaceChildren(...next) { this.kids = next; }, remove() { this.isConnected = false; } });
+  const D = studio([], { h: node, icon: () => null, toast: text => notices.push(text),
+    document: { addEventListener() {}, body: { append: m => modals.push(m) } } });
+  assert.equal(await D.importPackFile(new Blob(['bad zip']), () => assert.fail('must not navigate after failure')), null);
+  assert.equal(modals.length, 1); assert.equal(modals[0].isConnected, true);
+  const paragraphs = modals[0].kids[0].kids.filter(k => k?.tag === 'p');
+  assert.equal(paragraphs.find(p => p.props.role === 'alert').kids[0], 'not a zip file');
+  assert.equal(D.SC.list.length, 0); assert.match(notices[0], /Import failed/);
 });

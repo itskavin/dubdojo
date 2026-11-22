@@ -1202,7 +1202,17 @@ async function importPackFile(f, after = renderLibrary) {
     toast(`Imported “${sc.title}”: ${sc.lines.length} lines, ${n} takes${hasVideo ? ', video included' : ''}`);
     after?.(sc);
     return sc;
-  } catch (e) { toast('Import failed: ' + (e.message || e)); return null; }
+  } catch (e) {
+    const message = String(e.message || e);
+    toast('Import failed: ' + message);
+    const { s, close } = sheet();
+    fill(s, head('Import failed', close),
+      h('p', { role: 'alert', style: 'overflow-wrap:anywhere;white-space:pre-wrap' }, message),
+      e.importStage ? h('p', { class: 'muted' }, 'During: ' + e.importStage) : null,
+      h('p', { class: 'muted' }, 'If this keeps happening, share this error and your browser name.'),
+      h('div', { class: 'row' }, h('span'), h('button', { class: 'primary', onclick: () => { close(); importPack(after); } }, 'Choose pack again')));
+    return null;
+  }
 }
 
 /** Convert the source assets once, then use the same player/editor/export as native packs. */
@@ -1242,6 +1252,7 @@ async function importChoicerPack(z) {
   } catch (e) {
     if (savedId) await db.delClip('video', savedId).catch(() => {});
     if (e.name === 'AbortError') return null;
+    e.importStage = status.textContent;
     throw e;
   } finally { close(); }
 }

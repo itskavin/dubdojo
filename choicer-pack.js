@@ -58,7 +58,7 @@ window.ChoicerPack = (() => {
   function convert(pack, { signal, onProgress = () => {} } = {}) {
     return new Promise((resolve, reject) => {
       if (signal?.aborted) return reject(new DOMException('Import cancelled', 'AbortError'));
-      const worker = new Worker('pack-worker.js');
+      const worker = new Worker('pack-worker.js?v=20261122-2');
       const cleanup = () => { worker.terminate(); signal?.removeEventListener('abort', abort); };
       const abort = () => { cleanup(); reject(new DOMException('Import cancelled', 'AbortError')); };
       signal?.addEventListener('abort', abort, { once: true });
