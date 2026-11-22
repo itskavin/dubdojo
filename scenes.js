@@ -20,7 +20,6 @@ const LANGS = [['', 'Auto-detect'], ['japanese', 'Japanese'], ['english', 'Engli
   ['spanish', 'Spanish'], ['french', 'French'], ['german', 'German']];
 const VIDEO_TYPES = ['video/mp4;codecs=avc1,mp4a.40.2', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
 
-const SC = { list: loadScenes(), openId: null, libTok: 0 };
 function loadScenes() {
   const l = store.get(SCENES_KEY, []);
   return Array.isArray(l) ? l.filter(s => s && s.id && Array.isArray(s.lines)).map(s => normScene(s).scene) : [];
@@ -80,6 +79,9 @@ function normScene(s) {
     thumb: /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(s.thumb || '') && s.thumb.length < 300000 ? s.thumb : '',
   } };
 }
+
+// Load saved scenes after all normalization constants are initialized.
+const SC = { list: loadScenes(), openId: null, libTok: 0 };
 
 // ---------------------------------------------------------------- sample: Sintel trailer (CC-BY 3.0)
 // Lines transcribed by running asr-worker.js (Whisper base) on the clip; timings refined from the
@@ -402,7 +404,7 @@ class Mixer {
     this.out = ctx.createGain(); this.out.connect(ctx.destination);
     this.exportDest = ctx.createMediaStreamDestination(); this.out.connect(this.exportDest);
     this.dub = ctx.createGain(); this.dub.connect(this.out);
-    this.clips = new Map(); this.active = new Map(); this.done = new Set(); this.muted = new Set();
+    this.beds = new Map(); this.clips = new Map(); this.active = new Map(); this.done = new Set(); this.muted = new Set();
     this.started = 0; this.last = null;
     if (player.kind === 'html' && player.audioAccess) {
       const src = ctx.createMediaElementSource(player.el); // only once per element: each studio makes a new <video>
@@ -447,7 +449,7 @@ class Mixer {
     const t = p.time(), now = this.ctx.currentTime;
     if (this.last && Math.abs(t - (this.last.t + (now - this.last.now))) > 0.5) this.stopAll();
     this.last = { t, now };
-    for (const [k, c] of this.clips) {
+    for (const clips of [this.beds, this.clips]) for (const [k, c] of clips) {
       if (this.muted.has(k) || this.active.has(k) || this.done.has(k)) continue;
       if (t >= c.offset && t < c.offset + c.buf.duration) {
         const s = this.ctx.createBufferSource(); s.buffer = c.buf; s.connect(this.dub);
@@ -458,6 +460,13 @@ class Mixer {
     }
   }
   close() { this.stopAll(); this.ctx.close().catch(() => {}); }
+}
+
+/** Backing music/effects stay audible when the original dialogue is muted. */
+async function loadBacking(mixer, rec) {
+  if (!rec?.backing) return;
+  const buf = await mixer.ctx.decodeAudioData(await rec.backing.arrayBuffer());
+  mixer.beds.set('bed:backing', { buf, offset: 0 });
 }
 
 // ---------------------------------------------------------------- scoring (timing vs the line window)
@@ -519,10 +528,10 @@ async function openStudio(id) {
   if (!sc) { SC.openId = null; return renderLibrary(); }
   SC.openId = id; ST.scene = sc; const tok = ++ST.token;
   renderStudio();
-  let player = null;
+  let player = null, videoRecord = null;
   try {
     if (sc.source.kind === 'file') {
-      const rec = await db.clip('video', sc.id);
+      const rec = videoRecord = await db.clip('video', sc.id);
       if (tok !== ST.token) return;
       if (!rec?.blob) {
         stageMsg(`The video for this scene isn’t stored in this browser${sc.source.name ? ` (“${sc.source.name}”)` : ''}. `,
@@ -550,6 +559,9 @@ async function openStudio(id) {
   ST.player = player;
   if (sc.clipStart) player.seek(sc.clipStart);
   ST.mixer = new Mixer(player);
+  try { await loadBacking(ST.mixer, videoRecord); }
+  catch { toast('The backing track could not be decoded by this browser.'); }
+  if (tok !== ST.token) return;
   applyLevels();
   renderControls();
   await loadTakes(sc, tok);
@@ -879,6 +891,7 @@ async function addLines(items, what) {
   }
   sc.lines.sort(byStart); saveScene(); syncClips(); drawLines(); renderControls();
   toast(`Added ${items.length} lines` + (mode === 'replace' ? ' (replaced)' : ''));
+  return true;
 }
 
 async function importSubs() {
@@ -978,17 +991,19 @@ async function sourceBlob(sc) {
 function autoScript() {
   if (!canAudio()) return toast(noAudioWhy());
   if (ST.run || ST.busy) return;
-  const sc = ST.scene; const o = { language: '', task: 'translate', size: 'base' };
+  const sc = ST.scene; const o = { language: '', task: 'translate', size: 'base', speakers: '0' };
   const { s, close } = sheet({ onClose: () => { if (job.running) { asrWorker?.terminate(); asrWorker = null; ST.busy = null; } } });
   const job = { running: false };
   const sel = (k, opts) => h('select', { onchange: e => { o[k] = e.target.value; } }, opts.map(([v, label]) => h('option', { value: v, selected: v === o[k] }, label)));
   const status = h('p', { class: 'muted' }); const bar = h('div', { class: 'bar', hidden: true }, h('i'));
   const go = h('button', { class: 'primary', onclick: start }, 'Start');
   fill(s, head('Auto-script with Whisper', close),
-    h('p', { class: 'muted' }, 'Whisper listens to the clip and writes timed lines, right in your browser (nothing is uploaded). It doesn’t know who is speaking: assign speakers afterwards.'),
+    h('p', { class: 'muted' }, 'Whisper listens to the clip and writes timed lines, right in your browser (nothing is uploaded). A voice detector skips sound effects, music and noise, and a voice recognizer groups the lines by who is speaking (Speaker 1, Speaker 2, …). Check the result and rename the speakers in Characters.'),
     h('div', { class: 'field' }, h('label', {}, 'Language spoken'), sel('language', LANGS)),
     h('div', { class: 'field' }, h('label', {}, 'Output'), sel('task', [['translate', 'English translation'], ['transcribe', 'Same language as spoken']])),
     h('div', { class: 'field' }, h('label', {}, 'Model'), sel('size', [['base', 'Base (about 136 MB, faster)'], ['small', 'Small (about 250 MB, better)']])),
+    h('div', { class: 'field' }, h('label', {}, 'Speakers'), sel('speakers', [['0', 'Detect automatically'], ['1', 'Just one (don’t separate voices)'],
+      ...[2, 3, 4, 5, 6].map(n => [String(n), `Exactly ${n}`])])),
     bar, status, h('div', { class: 'row' }, h('span'), go));
   async function start() {
     go.disabled = true; job.running = true; ST.busy = { label: 'Auto-script running…', cancel: close };
@@ -1000,7 +1015,7 @@ function autoScript() {
       const audio = new Float32Array(ab.length);
       for (let c = 0; c < ab.numberOfChannels; c++) { const d = ab.getChannelData(c); for (let i = 0; i < d.length; i++) audio[i] += d[i] / ab.numberOfChannels; }
       setStatus('Loading the speech model…');
-      const lines = await new Promise((res, rej) => {
+      const { lines, notes } = await new Promise((res, rej) => {
         asrWorker ||= new Worker('asr-worker.js', { type: 'module' });
         asrWorker.onmessage = ({ data: m }) => {
           if (m.op === 'progress') {
@@ -1008,16 +1023,21 @@ function autoScript() {
             bar.hidden = false; bar.firstChild.style.width = pct + '%';
             setStatus(`${m.label}: ${pct}% of ${(m.total / 1048576).toFixed(0)} MB`);
           } else if (m.op === 'status') { bar.hidden = true; setStatus(m.text); }
-          else if (m.op === 'done') res(m.lines || []);
+          else if (m.op === 'done') res({ lines: m.lines || [], notes: m.notes || [] });
           else if (m.op === 'error') rej(new Error(m.error));
         };
         asrWorker.onerror = e => { asrWorker = null; rej(new Error(e.message || 'speech engine failed to start')); };
-        asrWorker.postMessage({ size: o.size, audio, task: o.task, language: o.language || null }, [audio.buffer]);
+        asrWorker.postMessage({ size: o.size, audio, task: o.task, language: o.language || null, speakers: +o.speakers }, [audio.buffer]);
       });
       job.running = false; ST.busy = null;
       if (!s.isConnected) return;
       close();
-      await addLines(lines.map(l => ({ start: num(l.start), end: num(l.end, num(l.start) + 2), text: String(l.text || '').trim(), speaker: null })).filter(l => l.text), 'Whisper’s script');
+      const items = lines.map(l => ({ start: num(l.start), end: num(l.end, num(l.start) + 2), text: String(l.text || '').trim(),
+        speaker: l.speaker ? String(l.speaker).slice(0, 60) : null })).filter(l => l.text);
+      const added = await addLines(items, 'Whisper’s script');
+      const found = new Set(items.map(l => l.speaker).filter(Boolean)).size;
+      const msg = [...notes, found > 1 ? `Found ${found} different voices. Rename them in Characters.` : ''].filter(Boolean).join(' ');
+      if (msg && added) setTimeout(() => toast(msg), 2500);
     } catch (e) {
       job.running = false; ST.busy = null;
       setStatus('Failed: ' + (e.message || e)); go.disabled = false;
@@ -1131,9 +1151,14 @@ async function exportPack(sc, o) {
     files.push({ name: file, data: r.blob });
     takes[l.id] = { file, offset: r.offset, mime, score: r.score };
   }
-  if (o.video) { const v = await db.clip('video', sc.id); if (v?.blob) files.push({ name: 'video.' + videoExt(v), data: v.blob }); }
+  let backing = null;
+  if (o.video) {
+    const v = await db.clip('video', sc.id);
+    if (v?.blob) files.push({ name: 'video.' + videoExt(v), data: v.blob });
+    if (v?.backing) { backing = 'backing.' + audioExt(v.backing.type); files.push({ name: backing, data: v.backing }); }
+  }
   const json = { format: 'dubdojo-pack', version: 1,
-    scene: { title: sc.title, source: sc.source, lines: sc.lines, chars: sc.chars, credits: sc.credits, license: sc.license, clipStart: sc.clipStart, clipEnd: sc.clipEnd }, takes };
+    scene: { title: sc.title, source: sc.source, lines: sc.lines, chars: sc.chars, credits: sc.credits, license: sc.license, clipStart: sc.clipStart, clipEnd: sc.clipEnd, thumb: sc.thumb }, takes, backing };
   files.unshift({ name: 'dubpack.json', data: JSON.stringify(json, null, 1) });
   const zip = await makeZip(files);
   download(`${slug(sc.title)}.dubpack.zip`, zip, 'application/zip');
@@ -1145,7 +1170,12 @@ async function importPack(after = renderLibrary) {
 async function importPackFile(f, after = renderLibrary) {
   try {
     const z = await readZip(f);
-    const jb = await z.get('dubpack.json'); if (!jb) throw new Error('no dubpack.json inside');
+    const jb = await z.get('dubpack.json');
+    if (!jb) {
+      const sc = await importChoicerPack(z);
+      if (sc) after?.(sc);
+      return sc;
+    }
     const data = JSON.parse(await jb.text());
     if (data?.format !== 'dubdojo-pack') throw new Error('not a DubDojo pack');
     const { scene: sc, idMap } = normScene({ ...(data.scene || {}), id: uid('sc_'), created: Date.now(), settings: undefined });
@@ -1154,7 +1184,8 @@ async function importPackFile(f, after = renderLibrary) {
     if (vname && sc.source.kind === 'file') {
       const ext = vname.split('.').pop().toLowerCase();
       const blob = await z.get(vname, EXT_MIME[ext] || 'video/' + ext);
-      await db.putClip('video', sc.id, { blob, name: sc.source.name }); hasVideo = true;
+      const backing = typeof data.backing === 'string' ? await z.get(data.backing, EXT_MIME[data.backing.split('.').pop().toLowerCase()] || 'audio/ogg') : null;
+      await db.putClip('video', sc.id, { blob, name: sc.source.name, backing }); hasVideo = true;
     }
     for (const [oldId, t] of Object.entries(data.takes && typeof data.takes === 'object' ? data.takes : {})) {
       const lid = idMap[oldId];
@@ -1172,6 +1203,47 @@ async function importPackFile(f, after = renderLibrary) {
     after?.(sc);
     return sc;
   } catch (e) { toast('Import failed: ' + (e.message || e)); return null; }
+}
+
+/** Convert the source assets once, then use the same player/editor/export as native packs. */
+async function importChoicerPack(z) {
+  const controller = new AbortController();
+  const { s, close } = sheet({ onClose: () => controller.abort() });
+  const status = h('p', { role: 'status', 'aria-live': 'polite' }, 'Reading pack…');
+  fill(s, head('Import The Choicer Voicer pack', close, 'Cancel'), status,
+    h('p', { class: 'muted' }, 'The first import downloads a video converter. Conversion can take a few minutes. Keep this tab open; your media stays on this device.'));
+  let savedId = null;
+  try {
+    const pack = await ChoicerPack.read(z);
+    if (controller.signal.aborted) return null;
+    const result = await ChoicerPack.convert(pack, { signal: controller.signal, onProgress: text => { status.textContent = text; } });
+    const chars = {}, roles = new Map();
+    const lines = pack.refs.map((r, i) => {
+      if (!roles.has(r.speaker)) {
+        const id = 'role_' + roles.size;
+        roles.set(r.speaker, id); chars[id] = { name: r.speaker, color: PALETTE[(roles.size - 1) % PALETTE.length], voice: {} };
+      }
+      return { id: 'cv_' + (i + 1), start: r.start, end: Math.min(result.duration, r.start + result.lengths[r.file]), speaker: roles.get(r.speaker), text: r.text };
+    });
+    let thumb = '';
+    if (pack.icon && pack.icon.size < 220000) thumb = await new Promise((resolve, reject) => {
+      const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = () => reject(reader.error); reader.readAsDataURL(pack.icon);
+    });
+    const { scene: sc } = normScene(newScene({ title: pack.title, source: { kind: 'file', name: 'scene.mp4' }, lines, chars,
+      credits: `The Choicer Voicer pack${pack.authors ? ' by ' + pack.authors : ''}`, clipStart: 0, clipEnd: result.duration, thumb }));
+    if (controller.signal.aborted) return null;
+    savedId = sc.id;
+    await db.putClip('video', sc.id, { blob: result.video, name: 'scene.mp4', backing: pack.backing });
+    if (controller.signal.aborted) { await db.delClip('video', sc.id); return null; }
+    SC.list.unshift(sc); saveScenes(); savedId = null;
+    navigator.storage?.persist?.().catch(() => {});
+    toast(`Imported “${sc.title}”: ${sc.lines.length} lines, ${Object.keys(sc.chars).length} characters`);
+    return sc;
+  } catch (e) {
+    if (savedId) await db.delClip('video', savedId).catch(() => {});
+    if (e.name === 'AbortError') return null;
+    throw e;
+  } finally { close(); }
 }
 
 // ---------------------------------------------------------------- library view
@@ -1235,7 +1307,7 @@ function renderLibrary() {
     ['clapper', 'Video file', 'MP4 or WebM from your device', addFile],
     ['link', 'Video link', 'A direct .mp4 or .webm URL', addLink],
     ['tv', 'YouTube', 'Dub over a YouTube video', () => addYouTube()],
-    ['upload', 'Import pack', 'Open a .dubpack.zip file', () => importPack()],
+    ['upload', 'Import pack', 'DubDojo or The Choicer Voicer ZIP', () => importPack()],
   ];
   const list = h('div', { class: 'mk-list' });
   if (!SC.list.length) {
@@ -1403,6 +1475,6 @@ function editCopy(data) {
 
 // shared with game.js, and handles for tests / debugging
 window.DubStudio = { SC, ST, parseSRT, parseASS, parseSubs, toSRT, makeZip, readZip, scoreTake, ytId, openStudio, dubRun, watch, sampleScene,
-  Mixer, htmlPlayer, ytPlayer, drawSub, normScene, saveScenes, takePack, fmt, parseT, sourceLabel, importPack, importPackFile, exportPackModal,
+  Mixer, loadBacking, htmlPlayer, ytPlayer, drawSub, normScene, saveScenes, takePack, fmt, parseT, sourceLabel, importPack, importPackFile, exportPackModal,
   exportPack, editCopy, safeColor, renderLibrary, VIDEO_TYPES, clamp, num };
 })();

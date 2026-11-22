@@ -19,6 +19,16 @@ cd choicer-voicer && python3 -m http.server 8000   # then open http://localhost:
 ```
 The microphone only works over `https://` or on `localhost`. Opening the file directly (`file://`) won't work.
 
+## Import The Choicer Voicer packs
+
+In **Packs → Import pack (.zip)** or **Make a pack → Import pack**, select the downloaded ZIP directly. Video dub packs from The Choicer Voicer are detected using `_pack_info.ini`; DubDojo imports the title, authors, cover, captions, character names and exact `dub_timestamps`. Voice-clip lengths determine the line end times, including overlapping dialogue.
+
+The importer converts `dub_video.ogv` and the supplied voice clips into a playable MP4 (up to 960 pixels wide) locally. The first import downloads about 31 MB of FFmpeg WASM; conversion can take a few minutes and can be cancelled. Music/effects from `_backing_track` stay separate and continue while you record. Original voice clips become reference audio, so they do not count as your recordings or scores. Exporting a `.dubpack.zip` with video preserves the backing track for re-import without another conversion.
+
+Import one video dub pack per ZIP. Packs containing only soundboard clips and images, without a `dub_video` file, are not supported.
+
+Run importer checks with `node --test tests/choicer-pack.test.cjs`.
+
 ## Voice engines
 - **Browser robot voice:** the browser's built-in speech. It's instant and needs no download, but the voices differ from device to device.
 - **Kokoro-82M** via `kokoro-js`: 28 English voices, Apache-2.0. About 92 MB, downloaded once when you first use it.

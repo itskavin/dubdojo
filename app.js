@@ -838,7 +838,8 @@ async function exportPack(p) {
 }
 
 async function importPack() {
-  const f = await pickFile('.json,application/json'); if (!f) return;
+  const f = await pickFile('.json,.zip,application/json,application/zip'); if (!f) return;
+  if (/\.zip$/i.test(f.name)) return window.DubStudio.importPackFile(f, sc => navigate('#/pack/my:' + sc.id));
   try {
     const data = JSON.parse(await f.text());
     if (!PACK_FORMATS.includes(data.format)) throw new Error('not a voice pack file');

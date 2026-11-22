@@ -9,6 +9,7 @@ DubDojo is GPL-3.0 (see LICENSE). It uses the components below, each under its o
 | [Piper voices](https://huggingface.co/rhasspy/piper-voices) | Per voice | Each voice has its own license, listed in its `MODEL_CARD` file in the catalog. `lessac` and `ryan` are non-commercial. |
 | @diffusionstudio/piper-wasm / piper_phonemize | See note | `vendor/piper_phonemize.js` comes from [@mintplex-labs/piper-tts-web](https://github.com/Mintplex-Labs/piper-tts-web) (MIT). Its phonemizer is built on [eSpeak NG](https://github.com/espeak-ng/espeak-ng), which is GPL-3.0. |
 | [onnxruntime-web](https://github.com/microsoft/onnxruntime) | MIT | Runs Piper models |
+| [FFmpeg WASM](https://github.com/ffmpegwasm/ffmpeg.wasm) (`@ffmpeg/core` 0.12.10) | GPL-3.0 (core); MIT (WASM bindings) | Downloaded on demand from jsDelivr; local video-pack conversion, including Theora/Vorbis and x264/AAC. [Core source and build scripts](https://github.com/ffmpegwasm/ffmpeg.wasm/tree/v0.12.10) |
 | [transformers.js](https://github.com/huggingface/transformers.js) | Apache-2.0 | Runs Whisper |
 | [Whisper](https://github.com/openai/whisper) weights | MIT | Speech recognition and translation |
 | [Sintel](https://durian.blender.org/) trailer | CC-BY 3.0 | © Blender Foundation, durian.blender.org |

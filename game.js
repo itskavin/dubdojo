@@ -160,7 +160,7 @@ function renderHome(withHero) {
       grid),
     h('section', { class: 'psec', 'aria-labelledby': 'h-mine' },
       h('div', { class: 'sec-head' }, h('h2', { class: 'sec-title', id: 'h-mine' }, 'My packs'),
-        btn('ghost sm', 'upload', 'Import .dubpack.zip', () => D.importPack(() => route()))),
+        btn('ghost sm', 'upload', 'Import pack (.zip)', () => D.importPack(() => route()))),
       myGrid),
     footer());
   $main.replaceChildren(page);
@@ -265,10 +265,10 @@ async function loadVideo(g) {
   setLoading(g, 'Loading video…');
   const slow = setTimeout(() => { if (!g.dead && !g.els.load.hidden) setLoading(g, 'Still loading… the first frames can take a moment on slow connections.'); }, 9000);
   try {
-    let player;
+    let player, videoRecord;
     if (p.src.kind === 'url') player = await D.htmlPlayer(g.stage, p.src.url, { link: true });
     else if (p.src.kind === 'file') {
-      const rec = await db.clip('video', p.src.sceneId);
+      const rec = videoRecord = await db.clip('video', p.src.sceneId);
       if (!rec?.blob) throw new Error('This pack’s video isn’t stored in this browser. Open the pack in Make a pack and locate the file.');
       g.blobURL = URL.createObjectURL(rec.blob);
       player = await D.htmlPlayer(g.stage, g.blobURL, { link: false });
@@ -283,6 +283,8 @@ async function loadVideo(g) {
       v.addEventListener('error', () => { if (!g.dead && v.error) showVideoError(g, 'The video stopped loading. Check your connection.'); });
     }
     g.mixer = new D.Mixer(player);
+    await D.loadBacking(g.mixer, videoRecord);
+    if (g.dead) return false;
     g.mixer.setLevels(1, false);
     g.canMix = !!g.mixer.orig;
     await seekTo(g, p.clipStart + 0.05);
