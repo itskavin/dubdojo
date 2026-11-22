@@ -36,7 +36,7 @@ const SAFE_ID = /^[\w-]{1,40}$/;
 
 function newScene(over = {}) {
   return { id: uid('sc_'), title: 'Untitled scene', source: { kind: 'file', name: 'video' }, lines: [], chars: {},
-    settings: { orig: 0.15, karaoke: false, ai: true }, credits: '', license: '', created: Date.now(), ...over };
+    settings: { orig: 0.15, karaoke: false, ai: true }, credits: '', license: '', clipStart: null, clipEnd: null, created: Date.now(), ...over };
 }
 
 function normVoice(v) {
@@ -75,6 +75,9 @@ function normScene(s) {
     id: String(s.id || uid('sc_')), title: String(s.title || 'Untitled scene').slice(0, 200), source: normSource(s.source), lines, chars,
     settings: { orig: clamp(num(st.orig, 0.15)), karaoke: !!st.karaoke, ai: st.ai !== false },
     credits: String(s.credits || '').slice(0, 2000), license: String(s.license || '').slice(0, 200), created: num(s.created, Date.now()),
+    clipStart: Number.isFinite(+s.clipStart) && s.clipStart !== null && s.clipStart !== '' ? Math.max(0, +s.clipStart) : null,
+    clipEnd: Number.isFinite(+s.clipEnd) && s.clipEnd !== null && s.clipEnd !== '' ? Math.max(0, +s.clipEnd) : null,
+    thumb: /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(s.thumb || '') && s.thumb.length < 300000 ? s.thumb : '',
   } };
 }
 
@@ -294,7 +297,7 @@ function sheet({ wide = false, onClose } = {}) {
   OPEN.add(close);
   return { m, s, close };
 }
-const head = (title, close, label = 'Close ✕') => h('div', { class: 'row' }, h('h3', { style: 'margin:0' }, title), h('button', { onclick: close }, label));
+const head = (title, close, label = 'Close') => h('div', { class: 'row' }, h('h3', { style: 'margin:0' }, title), h('button', { onclick: close }, label === 'Close' ? icon('x') : null, label));
 /** Small choice dialog. buttons: [[value, label, cls]]. Resolves with value or null. */
 function choose(title, msg, buttons) {
   return new Promise(res => {
@@ -410,6 +413,7 @@ class Mixer {
       this.kara = ctx.createGain();
       this.kara.channelCount = 1; this.kara.channelCountMode = 'explicit';
       split.connect(this.kara, 0); split.connect(inv, 1); inv.connect(this.kara);
+      this.kara.gain.value = 0;
       this.kara.connect(this.out);
     }
   }
@@ -544,6 +548,7 @@ async function openStudio(id) {
   if (tok !== ST.token) { player?.destroy(); return; }
   if (!player) { renderControls(); return; }
   ST.player = player;
+  if (sc.clipStart) player.seek(sc.clipStart);
   ST.mixer = new Mixer(player);
   applyLevels();
   renderControls();
@@ -618,7 +623,7 @@ function frame() {
     const l = run.cur;
     if (run.phase === 'rec') {
       w = clamp((t - l.start) / Math.max(0.1, l.end - l.start));
-      st = t < l.start ? '● REC  get ready…' : t <= l.end ? '● REC  speak now' : '● REC  finishing…'; cls = 'rec';
+      st = t < l.start ? 'REC · get ready…' : t <= l.end ? 'REC · speak now' : 'REC · finishing…'; cls = 'rec';
     } else if (t < l.start) {
       const left = l.start - t; w = clamp(1 - left / 1.5);
       st = left <= 1.5 ? `Next: ${charOf(l.speaker).name} in ${left.toFixed(1)}s` : `Next: ${charOf(l.speaker).name}`; cls = 'cd';
@@ -670,7 +675,7 @@ async function aiFill(lines = ST.scene.lines) {
   let cancelled = false; const tok = ST.token;
   const msg = h('p', {}, ''); const bar = h('div', { class: 'bar' }, h('i'));
   const { s, close } = sheet({ onClose: () => { cancelled = true; } });
-  fill(s, head('✨ AI voices for undubbed lines', close, 'Cancel'), bar, msg,
+  fill(s, head('AI voices for undubbed lines', close, 'Cancel'), bar, msg,
     h('p', { class: 'muted' }, 'The first line waits for a one-time voice model download. Generated lines are kept until you leave the studio.'));
   let fail = 0;
   for (const [n, l] of todo.entries()) {
@@ -751,7 +756,7 @@ async function dubRun(lines) {
   const mx = ST.mixer; const tok = ST.token;
   lines.forEach(l => mx.muted.add(l.id));
   renderControls();
-  toast('🎧 Use headphones so the video isn’t recorded with your voice.');
+  toast('Tip: use headphones so the video isn’t recorded with your voice.');
   ST.stopAt = null;
   p.seek(Math.max(0, lines[0].start - 1.5)); await p.play();
   const mime = REC_TYPES.find(t => MediaRecorder.isTypeSupported?.(t));
@@ -812,7 +817,7 @@ function showResults(results, aborted) {
       h('span', { class: 'muted' }, (avg >= 80 ? 'Great timing!' : avg >= 60 ? 'Solid timing.' : 'Keep at it: watch the countdown bar.') + (low.length ? ' Retry the red ones?' : '')),
       h('div', { class: 'toolbar', style: 'margin:0' },
         low.length ? h('button', { onclick: () => { close(); dubRun(low); } }, `Retry low scores (${low.length})`) : null,
-        h('button', { class: 'primary', onclick: () => { close(); watch(); } }, '▶ Watch my dub'))));
+        h('button', { class: 'primary', onclick: () => { close(); watch(); } }, icon('play'), 'Watch my dub'))));
 }
 const scoreBadge = sc => h('span', { class: 'ds-score ' + (sc == null ? '' : sc >= 80 ? 'good' : sc >= 60 ? 'ok' : 'low'), title: sc == null ? 'Not dubbed yet' : 'Timing score' }, sc == null ? '—' : String(sc));
 
@@ -888,7 +893,7 @@ function drawLines() {
   const sc = ST.scene, list = ST.els.lines; if (!sc || !list) return;
   ST.rows = new Map(); ST.curId = null;
   if (!sc.lines.length) {
-    list.replaceChildren(h('p', { class: 'muted ds-empty' }, 'No lines yet. Import subtitles, try ✨ Auto-script, or press M at the start and end of a line while the video plays.'));
+    list.replaceChildren(h('p', { class: 'muted ds-empty' }, 'No lines yet. Import subtitles, try Auto-script, or press M at the start and end of a line while the video plays.'));
     return;
   }
   list.replaceChildren(...sc.lines.map(lineRow));
@@ -902,7 +907,7 @@ function lineRow(l) {
       if (!Number.isFinite(v)) { e.target.value = fmt(l[k]); return toast('Use m:ss.s, e.g. 1:02.5'); }
       setTime(l, k, v);
     } });
-  const atHead = k => h('button', { class: 'ds-ico', title: `Set ${k} to the playhead`, onclick: () => ST.player && setTime(l, k, ST.player.time()) }, '⌖');
+  const atHead = k => h('button', { class: 'ds-ico', title: `Set ${k} to the playhead`, 'aria-label': `Set ${k} to the playhead`, onclick: () => ST.player && setTime(l, k, ST.player.time()) }, icon('target'));
   const row = h('div', { class: 'ds-line', style: `border-left-color:${safeColor(c.color)}` },
     h('div', { class: 'ds-l1' },
       h('select', { class: 'ds-spk', title: 'Speaker', onchange: e => { l.speaker = e.target.value; ST.lastSpeaker = l.speaker; saveScene(); syncClips(); drawLines(); } },
@@ -912,9 +917,9 @@ function lineRow(l) {
       timeIn('start'), atHead('start'), h('span', { class: 'muted' }, '–'), timeIn('end'), atHead('end'),
       h('span', { class: 'ds-sp' }),
       h('span', { title: tk?.note || '' }, scoreBadge(tk ? tk.score : null)),
-      h('button', { class: 'rec ds-ico', title: 'Record this line', disabled: !!ST.run, onclick: () => dubRun([l]) }, '⏺'),
-      h('button', { class: 'ds-ico', title: 'Preview this line', onclick: () => previewLine(l) }, '▶'),
-      h('button', { class: 'danger ds-ico', title: 'Delete line', onclick: () => deleteLine(l) }, '✕')));
+      h('button', { class: 'rec ds-ico', title: 'Record this line', 'aria-label': 'Record this line', disabled: !!ST.run, onclick: () => dubRun([l]) }, icon('mic')),
+      h('button', { class: 'ds-ico', title: 'Preview this line', 'aria-label': 'Preview this line', onclick: () => previewLine(l) }, icon('play')),
+      h('button', { class: 'danger ds-ico', title: 'Delete line', 'aria-label': 'Delete line', onclick: () => deleteLine(l) }, icon('trash'))));
   ST.rows.set(l.id, row);
   return row;
 }
@@ -933,20 +938,20 @@ function charactersModal() {
   const changed = () => { saveScene(); syncClips(); drawLines(); renderControls(); };
   function draw() {
     fill(s, head('Characters', close),
-      h('p', { class: 'muted' }, 'Pick an AI voice (🎙) to have it fill the lines nobody has dubbed yet. Characters on the browser robot voice are skipped by AI fill.'),
+      h('p', { class: 'muted' }, 'Pick an AI voice to have it fill the lines nobody has dubbed yet. Characters on the browser robot voice are skipped by AI fill.'),
       h('div', { class: 'ds-chars' }, Object.entries(sc.chars).map(([id, c]) => h('div', { class: 'ds-char' },
         h('input', { type: 'color', value: safeColor(c.color), oninput: e => { c.color = e.target.value; saveScene(); }, onchange: changed }),
         h('input', { type: 'text', value: c.name, oninput: e => { c.name = e.target.value.slice(0, 60); saveScene(); }, onchange: changed }),
         h('span', { class: 'ds-voice' }, Voices.labelOf(c.voice), isAI(c.voice) ? null : h('span', { class: 'tag' }, 'no AI fill')),
         h('span', { class: 'muted' }, `${sc.lines.filter(l => l.speaker === id).length} lines`),
-        h('button', { onclick: () => openVoicePicker(c, () => { changed(); draw(); }) }, '🎙 Voice'),
-        h('button', { title: 'Hear it', onclick: () => speakWith(c.voice, `Hi, I'm ${c.name}.`) }, '▶'),
-        h('button', { class: 'danger', title: 'Delete character', onclick: () => {
+        h('button', { onclick: () => openVoicePicker(c, () => { changed(); draw(); }) }, icon('mic'), 'Voice'),
+        h('button', { title: 'Hear it', 'aria-label': 'Hear it', onclick: () => speakWith(c.voice, `Hi, I'm ${c.name}.`) }, icon('play')),
+        h('button', { class: 'danger', title: 'Delete character', 'aria-label': 'Delete character', onclick: () => {
           if (sc.lines.some(l => l.speaker === id)) return toast('This character still has lines. Move them to someone else first.');
           delete sc.chars[id]; changed(); draw();
-        } }, '✕')))),
+        } }, icon('trash'))))),
       h('div', { class: 'row', style: 'margin-top:10px' }, h('span'),
-        h('button', { onclick: () => { charByName(`Character ${Object.keys(sc.chars).length + 1}`); changed(); draw(); } }, '+ Character')));
+        h('button', { onclick: () => { charByName(`Character ${Object.keys(sc.chars).length + 1}`); changed(); draw(); } }, icon('plus'), 'Character')));
   }
   draw();
 }
@@ -979,7 +984,7 @@ function autoScript() {
   const sel = (k, opts) => h('select', { onchange: e => { o[k] = e.target.value; } }, opts.map(([v, label]) => h('option', { value: v, selected: v === o[k] }, label)));
   const status = h('p', { class: 'muted' }); const bar = h('div', { class: 'bar', hidden: true }, h('i'));
   const go = h('button', { class: 'primary', onclick: start }, 'Start');
-  fill(s, head('✨ Auto-script with Whisper', close),
+  fill(s, head('Auto-script with Whisper', close),
     h('p', { class: 'muted' }, 'Whisper listens to the clip and writes timed lines, right in your browser (nothing is uploaded). It doesn’t know who is speaking: assign speakers afterwards.'),
     h('div', { class: 'field' }, h('label', {}, 'Language spoken'), sel('language', LANGS)),
     h('div', { class: 'field' }, h('label', {}, 'Output'), sel('task', [['translate', 'English translation'], ['transcribe', 'Same language as spoken']])),
@@ -1028,7 +1033,7 @@ function exportVideoModal() {
   if (!mime) return toast('This browser cannot record video.');
   const o = { burn: true };
   const { s, close } = sheet();
-  fill(s, head('🎞 Export dubbed video', close),
+  fill(s, head('Export dubbed video', close),
     h('p', { class: 'muted' }, `The clip plays once from start to end in real time (${fmt(ST.player.duration())}) while it records your dub, the AI voices and the original at your mix settings. Keep this tab in front.`),
     h('label', {}, h('input', { type: 'checkbox', checked: o.burn, onchange: e => { o.burn = e.target.checked; } }), ' Burn in subtitles'),
     h('div', { class: 'row', style: 'margin-top:12px' }, h('span', { class: 'muted' }, `Format: ${mime.split(';')[0]}`),
@@ -1048,7 +1053,7 @@ async function exportVideo(mime, burn) {
   const bar = h('div', { class: 'bar' }, h('i')); const msg = h('p', { class: 'muted' }, 'Starting…');
   const { s, close } = sheet({ onClose: () => { cancelled = true; } });
   s.append(head('Exporting…', close, 'Cancel'), bar, msg);
-  ST.busy = { label: '● Exporting video', cancel: close };
+  ST.busy = { label: 'Exporting video…', cancel: close };
   mx.muted.clear(); ST.stopAt = null; resume();
   p.pause(); p.seek(0);
   await new Promise(r => { if (!v.seeking) return r(); v.addEventListener('seeked', r, { once: true }); setTimeout(r, 3000); });
@@ -1105,7 +1110,7 @@ async function exportPackModal(sc) {
   let nTakes = 0; try { nTakes = (await db.clipKeys(takePack(sc.id))).size; } catch {}
   const o = { video: !!vrec?.blob, takes: nTakes > 0 };
   const { s, close } = sheet();
-  fill(s, head('📦 Export dub pack', close),
+  fill(s, head('Export dub pack', close),
     h('p', { class: 'muted' }, 'A dub pack holds the script, characters and voices, and optionally your takes and the video. Only include a video you have the right to share.'),
     vrec?.blob ? h('label', { class: 'ds-check' }, h('input', { type: 'checkbox', checked: o.video, onchange: e => { o.video = e.target.checked; } }),
       ` Include video (${(vrec.blob.size / 1048576).toFixed(1)} MB)`) : h('p', { class: 'muted' }, sc.source.kind === 'file' ? 'No video stored for this scene.' : 'The video is linked, not included.'),
@@ -1128,13 +1133,16 @@ async function exportPack(sc, o) {
   }
   if (o.video) { const v = await db.clip('video', sc.id); if (v?.blob) files.push({ name: 'video.' + videoExt(v), data: v.blob }); }
   const json = { format: 'dubdojo-pack', version: 1,
-    scene: { title: sc.title, source: sc.source, lines: sc.lines, chars: sc.chars, credits: sc.credits, license: sc.license }, takes };
+    scene: { title: sc.title, source: sc.source, lines: sc.lines, chars: sc.chars, credits: sc.credits, license: sc.license, clipStart: sc.clipStart, clipEnd: sc.clipEnd }, takes };
   files.unshift({ name: 'dubpack.json', data: JSON.stringify(json, null, 1) });
   const zip = await makeZip(files);
   download(`${slug(sc.title)}.dubpack.zip`, zip, 'application/zip');
 }
-async function importPack() {
-  const f = await pickFile('.zip,application/zip'); if (!f) return;
+async function importPack(after = renderLibrary) {
+  const f = await pickFile('.zip,application/zip'); if (!f) return null;
+  return importPackFile(f, after);
+}
+async function importPackFile(f, after = renderLibrary) {
   try {
     const z = await readZip(f);
     const jb = await z.get('dubpack.json'); if (!jb) throw new Error('no dubpack.json inside');
@@ -1161,8 +1169,9 @@ async function importPack() {
     SC.list.unshift(sc); saveScenes();
     navigator.storage?.persist?.().catch(() => {});
     toast(`Imported “${sc.title}”: ${sc.lines.length} lines, ${n} takes${hasVideo ? ', video included' : ''}`);
-    renderLibrary();
-  } catch (e) { toast('Import failed: ' + (e.message || e)); }
+    after?.(sc);
+    return sc;
+  } catch (e) { toast('Import failed: ' + (e.message || e)); return null; }
 }
 
 // ---------------------------------------------------------------- library view
@@ -1222,41 +1231,51 @@ async function deleteScene(sc) {
 
 function renderLibrary() {
   const tok = ++SC.libTok;
-  const intro = h('div', { class: 'card ds-hero' },
-    h('h3', {}, '🎬 Dub Scenes'),
-    h('p', { class: 'muted' }, 'Load a clip from a movie, series or anime you have, get a timed script, and dub every line with your own voice in sync with the video. You get a timing score per line, AI voices fill the lines you skip, and you can export the result or share the scene as a dub pack. Clips stay in your browser.'),
-    h('div', { class: 'toolbar' },
-      h('button', { class: 'primary', onclick: addFile }, '+ Video file'),
-      h('button', { onclick: addLink }, '+ Video link'),
-      h('button', { onclick: () => addYouTube() }, '+ YouTube link'),
-      h('button', { onclick: importPack }, '⬆ Import dub pack')),
-    h('div', { class: 'toolbar', style: 'margin:0' },
-      h('button', { onclick: trySample }, 'Try the sample: Sintel trailer (CC-BY Blender Foundation)'),
-      h('span', { class: 'muted ds-small' }, SINTEL_CREDITS)));
-  const grid = h('div', { class: 'ds-lib' });
-  if (!SC.list.length) grid.append(h('p', { class: 'muted' }, 'No scenes yet. Add a clip above, or try the sample.'));
+  const tiles = [
+    ['clapper', 'Video file', 'MP4 or WebM from your device', addFile],
+    ['link', 'Video link', 'A direct .mp4 or .webm URL', addLink],
+    ['tv', 'YouTube', 'Dub over a YouTube video', () => addYouTube()],
+    ['upload', 'Import pack', 'Open a .dubpack.zip file', () => importPack()],
+  ];
+  const list = h('div', { class: 'mk-list' });
+  if (!SC.list.length) {
+    list.append(h('div', { class: 'empty' }, icon('package', 'empty-ic'), h('p', { class: 'empty-t' }, 'No packs yet'),
+      h('p', { class: 'muted' }, 'Start from a video above, or open any starter pack and choose “Edit a copy”.')));
+  }
   for (const sc of SC.list) {
     const stats = h('span', { class: 'muted' }, `${sc.lines.length} lines`);
-    grid.append(h('div', { class: 'card ds-card' },
-      h('div', { class: 'ds-ctitle' }, sc.title),
-      h('div', { class: 'muted ds-small' }, sourceLabel(sc.source)),
-      stats,
-      h('div', { class: 'toolbar', style: 'margin:8px 0 0' },
-        h('button', { class: 'primary', onclick: () => openStudio(sc.id) }, 'Open'),
-        h('button', { onclick: () => exportPackModal(sc) }, 'Export pack'),
-        h('button', { class: 'danger', onclick: () => deleteScene(sc) }, 'Delete'))));
+    const th = sc.thumb ? h('img', { src: sc.thumb, alt: '' }) : icon('film');
+    list.append(h('div', { class: 'mk-card' },
+      h('div', { class: 'mk-thumb' }, th),
+      h('div', { class: 'mk-body' },
+        h('div', { class: 'mk-title' }, sc.title),
+        h('div', { class: 'muted mk-src' }, sourceLabel(sc.source)),
+        stats),
+      h('div', { class: 'mk-actions' },
+        h('button', { class: 'primary', onclick: () => openStudio(sc.id) }, icon('pencil'), 'Edit'),
+        h('button', { disabled: !sc.lines.length, title: sc.lines.length ? '' : 'Add lines first', onclick: () => navigate('#/pack/my:' + sc.id) }, icon('play'), 'Play'),
+        h('button', { onclick: () => exportPackModal(sc) }, icon('download'), 'Export'),
+        h('button', { class: 'danger icon-only', 'aria-label': `Delete ${sc.title}`, title: 'Delete', onclick: () => deleteScene(sc) }, icon('trash')))));
     (async () => {
       try {
         const keys = await db.clipKeys(takePack(sc.id));
-        const ids = sc.lines.filter(l => keys.has(l.id)).map(l => l.id);
-        const scores = [];
-        for (const id of ids) { const r = await db.clip(takePack(sc.id), id); if (Number.isFinite(r?.score)) scores.push(r.score); }
+        const n = sc.lines.filter(l => keys.has(l.id)).length;
         if (tok !== SC.libTok) return;
-        stats.textContent = `${sc.lines.length} lines · ${ids.length} dubbed` + (scores.length ? ` · avg score ${Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)}` : '');
+        const range = sc.clipStart != null || sc.clipEnd != null ? ` · clip ${fmt(sc.clipStart || 0)}–${sc.clipEnd != null ? fmt(sc.clipEnd) : 'end'}` : '';
+        stats.textContent = `${sc.lines.length} lines${n ? ` · ${n} recorded in the editor` : ''}${range}`;
       } catch {}
     })();
   }
-  $view.replaceChildren(intro, grid);
+  $view.replaceChildren(h('div', { class: 'page mk-page' },
+    h('div', { class: 'page-head' }, h('div', {},
+      h('p', { class: 'eyebrow' }, 'Creator'),
+      h('h1', { class: 'page-title' }, 'Make a pack'),
+      h('p', { class: 'muted lead' }, 'Turn a clip you have the rights to into a dub pack: load the video, import subtitles or let Whisper write the script, trim the clip range, then play it like any other pack. Everything stays in your browser.'))),
+    h('h2', { class: 'sec-title' }, 'Start from'),
+    h('div', { class: 'src-tiles' }, tiles.map(([ic, t, sub, fn]) => h('button', { class: 'src-tile', onclick: fn },
+      h('span', { class: 'src-ic' }, icon(ic)), h('span', { class: 'src-t' }, t), h('span', { class: 'src-s' }, sub)))),
+    h('h2', { class: 'sec-title' }, 'Your packs'),
+    list));
 }
 
 // ---------------------------------------------------------------- studio view
@@ -1276,14 +1295,32 @@ function renderStudio() {
     credits: h('span', { class: 'muted ds-small' }, sc.credits),
   };
   const top = h('div', { class: 'ds-top' },
-    h('button', { onclick: () => { SC.openId = null; teardown(); renderLibrary(); } }, '← Scenes'),
+    h('button', { class: 'ghost', onclick: () => { SC.openId = null; teardown(); renderLibrary(); } }, icon('arrowLeft'), 'My packs'),
     h('div', { class: 'ds-ttl' }, ST.els.title, h('span', { class: 'tag' }, sourceLabel(sc.source))),
-    h('button', { onclick: detailsModal }, 'Details'));
-  $view.replaceChildren(h('div', { class: 'ds-studio' }, top,
+    h('button', { onclick: detailsModal }, icon('info'), 'Details'),
+    h('button', { class: 'primary', onclick: playThisPack }, icon('play'), 'Play this pack'));
+  $view.replaceChildren(h('div', { class: 'page ds-studio' }, top,
     h('div', { class: 'ds-grid' },
       h('div', { class: 'ds-left' }, stage, h('div', { class: 'ds-under' }, ST.els.time, ST.els.credits), ST.els.controls),
       h('div', { class: 'ds-right card' }, h('h3', {}, 'Script', h('span', { class: 'muted ds-small' }, 'M = mark start/end · Space = play/pause')), ST.els.lines))));
   renderControls(); drawLines();
+}
+function playThisPack() {
+  const sc = ST.scene; if (!sc) return;
+  const inClip = sc.lines.filter(l => (sc.clipStart == null || l.start >= sc.clipStart - 0.05) && (sc.clipEnd == null || l.end <= sc.clipEnd + 0.05));
+  if (!inClip.length) return toast(sc.lines.length ? 'No lines fall inside the clip range.' : 'Add some lines first: import subtitles or use Auto-script.');
+  navigate('#/pack/my:' + sc.id);
+}
+function setClip(k, v) {
+  const sc = ST.scene;
+  if (v == null) sc[k] = null;
+  else {
+    v = Math.max(0, v);
+    if (k === 'clipStart' && sc.clipEnd != null && v >= sc.clipEnd - 0.5) return toast('The clip must start before it ends.');
+    if (k === 'clipEnd' && sc.clipStart != null && v <= sc.clipStart + 0.5) return toast('The clip must end after it starts.');
+    sc[k] = Math.round(v * 10) / 10;
+  }
+  saveScene(); renderControls();
 }
 
 function applyLevels() { const s = ST.scene.settings; ST.mixer?.setLevels(s.orig, s.karaoke && canAudio()); }
@@ -1295,31 +1332,46 @@ function renderControls() {
   if (ST.role !== '*' && !sc.chars[ST.role]) ST.role = '*';
   const roleLines = () => sc.lines.filter(l => ST.role === '*' || l.speaker === ST.role);
   const set = (k, v) => { sc.settings[k] = v; saveScene(); applyLevels(); if (k === 'ai') syncClips(); };
+  const clipIn = k => h('input', { type: 'text', class: 'ds-t', inputMode: 'decimal', value: sc[k] != null ? fmt(sc[k]) : '',
+    placeholder: k === 'clipStart' ? 'start' : 'end', 'aria-label': k === 'clipStart' ? 'Clip start (m:ss.s)' : 'Clip end (m:ss.s)',
+    onchange: e => {
+      if (!e.target.value.trim()) return setClip(k, null);
+      const v = parseT(e.target.value);
+      if (!Number.isFinite(v)) { e.target.value = sc[k] != null ? fmt(sc[k]) : ''; return toast('Use m:ss.s, e.g. 1:02.5'); }
+      setClip(k, v);
+    } });
+  const atHead = k => h('button', { class: 'ds-ico', disabled: !ready, title: 'Set to the playhead', 'aria-label': `Set clip ${k === 'clipStart' ? 'start' : 'end'} to the playhead`,
+    onclick: () => setClip(k, ST.player.time()) }, icon('target'));
+  const group = (label, ic, ...kids) => h('div', { class: 'ds-group' }, h('div', { class: 'ds-glabel' }, icon(ic), label), h('div', { class: 'toolbar' }, ...kids));
   fill(el,
-    h('div', { class: 'toolbar ds-transport' },
-      h('button', { class: 'primary', disabled: !ready || running, onclick: watch }, '▶ Watch my dub'),
-      running ? h('button', { class: 'recording', onclick: abortRun }, '■ Stop (Esc)')
-        : h('button', { class: 'rec', disabled: !ready || !sc.lines.length, onclick: () => dubRun(roleLines()) }, '● Dub all'),
-      h('label', {}, 'dub only',
+    group('Test it', 'mic',
+      h('button', { class: 'primary', disabled: !ready || running, onclick: watch }, icon('play'), 'Watch my dub'),
+      running ? h('button', { class: 'recording', onclick: abortRun }, icon('square'), 'Stop (Esc)')
+        : h('button', { class: 'rec', disabled: !ready || !sc.lines.length, onclick: () => dubRun(roleLines()) }, icon('mic'), 'Dub all'),
+      h('label', {}, 'only',
         h('select', { disabled: running, onchange: e => { ST.role = e.target.value; } },
           h('option', { value: '*', selected: ST.role === '*' }, 'All characters'),
           roles.map(([id, c]) => h('option', { value: id, selected: ST.role === id }, c.name))))),
-    h('div', { class: 'toolbar ds-mix' },
+    group('Mix', 'volume',
       h('label', { title: 'Volume of the original soundtrack' }, 'Original',
         h('input', { type: 'range', min: 0, max: 1, step: 0.05, value: sc.settings.orig, oninput: e => set('orig', +e.target.value) })),
       h('label', { title: audioOK ? 'Cancels centre-panned dialogue (works best on stereo mixes)' : noAudioWhy() },
         h('input', { type: 'checkbox', checked: sc.settings.karaoke, disabled: !audioOK, onchange: e => set('karaoke', e.target.checked) }), 'Remove voices'),
       h('label', { title: 'Characters with an AI voice speak the lines you haven’t dubbed' },
         h('input', { type: 'checkbox', checked: sc.settings.ai, onchange: e => set('ai', e.target.checked) }), 'AI fill')),
-    h('div', { class: 'toolbar ds-tools' },
-      h('button', { disabled: running, onclick: importSubs }, 'Import subtitles'),
-      h('button', { disabled: !audioOK || running, title: audioOK ? '' : noAudioWhy(), onclick: autoScript }, '✨ Auto-script'),
-      h('button', { disabled: !sc.lines.length, onclick: () => download(slug(sc.title) + '.srt', toSRT(sc), 'text/plain') }, 'Export .srt'),
-      h('button', { disabled: !ready || running, onclick: () => { const t = ST.player.time(); addLine(t, t + 2); } }, '+ Line at playhead'),
-      h('button', { onclick: charactersModal }, '👥 Characters'),
-      h('button', { disabled: !audioOK || running, title: audioOK ? '' : noAudioWhy(), onclick: exportVideoModal }, '🎞 Export video'),
-      h('button', { disabled: running, onclick: () => exportPackModal(sc) }, '📦 Export pack')),
-    h('p', { class: 'muted ds-small' }, '🎧 Use headphones while dubbing so the video isn’t recorded with your voice. A countdown bar shows when your line is coming; speak while the red bar runs.'),
+    group('Clip range', 'scissors',
+      clipIn('clipStart'), atHead('clipStart'), h('span', { class: 'muted' }, '–'), clipIn('clipEnd'), atHead('clipEnd'),
+      h('button', { disabled: sc.clipStart == null && sc.clipEnd == null, onclick: () => { sc.clipStart = sc.clipEnd = null; saveScene(); renderControls(); } }, 'Whole video')),
+    group('Script', 'captions',
+      h('button', { disabled: running, onclick: importSubs }, icon('upload'), 'Import subtitles'),
+      h('button', { disabled: !audioOK || running, title: audioOK ? '' : noAudioWhy(), onclick: autoScript }, icon('sparkles'), 'Auto-script'),
+      h('button', { disabled: !ready || running, onclick: () => { const t = ST.player.time(); addLine(t, t + 2); } }, icon('plus'), 'Line at playhead'),
+      h('button', { onclick: charactersModal }, icon('users'), 'Characters'),
+      h('button', { disabled: !sc.lines.length, onclick: () => download(slug(sc.title) + '.srt', toSRT(sc), 'text/plain') }, icon('download'), '.srt')),
+    group('Share', 'share',
+      h('button', { disabled: !audioOK || running, title: audioOK ? '' : noAudioWhy(), onclick: exportVideoModal }, icon('film'), 'Export video'),
+      h('button', { disabled: running, onclick: () => exportPackModal(sc) }, icon('package'), 'Export .dubpack.zip')),
+    h('p', { class: 'muted ds-small' }, 'Editor test runs play the original quietly (Original slider), so use headphones here. The game mutes the original automatically while you record.'),
     ready && !audioOK ? h('p', { class: 'ds-warn ds-small' }, noAudioWhy(), ' Remove voices, Auto-script and video export are off; dubbing, scoring and watching still work.') : null);
 }
 
@@ -1333,13 +1385,24 @@ document.addEventListener('keydown', e => {
 });
 ['pointerdown', 'keydown'].forEach(ev => document.addEventListener(ev, () => ST.mixer?.resume(), true));
 
-// ---------------------------------------------------------------- register tab
+// ---------------------------------------------------------------- route: #/make
 function renderScenes() {
   if (SC.openId && SC.list.some(s => s.id === SC.openId)) openStudio(SC.openId);
   else { SC.openId = null; renderLibrary(); }
 }
-RENDER.scenes = renderScenes;
+ROUTES.make = { nav: 'make', tab: 'scenes', render: renderScenes };
 
-// handles for tests / debugging
-window.DubStudio = { SC, ST, parseSRT, parseASS, parseSubs, toSRT, makeZip, readZip, scoreTake, ytId, openStudio, dubRun, watch, sampleScene };
+/** Creates an editable copy of a pack (e.g. a starter pack) and opens it in the editor. */
+function editCopy(data) {
+  const { scene } = normScene({ ...data, id: uid('sc_'), created: Date.now() });
+  SC.list.unshift(scene); saveScenes();
+  SC.openId = scene.id;
+  navigate('#/make');
+  return scene;
+}
+
+// shared with game.js, and handles for tests / debugging
+window.DubStudio = { SC, ST, parseSRT, parseASS, parseSubs, toSRT, makeZip, readZip, scoreTake, ytId, openStudio, dubRun, watch, sampleScene,
+  Mixer, htmlPlayer, ytPlayer, drawSub, normScene, saveScenes, takePack, fmt, parseT, sourceLabel, importPack, importPackFile, exportPackModal,
+  exportPack, editCopy, safeColor, renderLibrary, VIDEO_TYPES, clamp, num };
 })();

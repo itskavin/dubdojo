@@ -4,7 +4,8 @@
 'use strict';
 
 // ---------------------------------------------------------------- helpers
-const $view = document.getElementById('view');
+const $main = document.getElementById('view');
+let $view = $main; // the router points this at the current page's content area
 const uid = (p = '') => p + Math.random().toString(36).slice(2, 9);
 
 function h(tag, props = {}, ...kids) {
@@ -275,7 +276,7 @@ function renderPlay() {
     h('label', {}, h('input', { type: 'checkbox', checked: S.settings.auto, onchange: e => { S.settings.auto = e.target.checked; saveSettings(); } }), 'Auto-advance'),
     h('label', {}, h('input', { type: 'checkbox', checked: S.settings.tts, onchange: e => { S.settings.tts = e.target.checked; saveSettings(); } }), 'AI/robot voices for undubbed lines'),
     h('span', { class: 'muted' }, 'Voice pack: ', h('b', {}, pack?.name || '—')),
-    h('button', { onclick: () => { stopAll(); play.started = false; renderPlay(); } }, '⟲ Restart'),
+    h('button', { onclick: () => { stopAll(); play.started = false; renderPlay(); } }, icon('replay'), 'Restart'),
   );
 
   const stage = h('div', { class: 'stage', style: `background:${sc?.bg || '#111'}` });
@@ -284,7 +285,7 @@ function renderPlay() {
     stage.append(h('div', { class: 'start-card' },
       h('h2', {}, S.story.title || 'Untitled'),
       h('p', { class: 'muted' }, `${Object.keys(S.story.scenes).length} scenes · ${allLines().length} lines`),
-      h('button', { class: 'primary', onclick: () => { play.started = true; goScene(S.story.start); } }, '▶ Start'),
+      h('button', { class: 'primary', onclick: () => { play.started = true; goScene(S.story.start); } }, icon('play'), 'Start'),
     ));
     $view.replaceChildren(bar, stage);
     return;
@@ -353,14 +354,14 @@ async function renderDub() {
 
   const head = h('div', { class: 'toolbar' },
     h('span', {}, 'Recording into ', h('b', {}, activePack()?.name), ` — ${count}/${lines.length} lines dubbed`),
-    h('button', { class: 'primary', onclick: () => dubSession(lines.filter(l => !done.has(l.id))) }, '● Dub missing lines'),
+    h('button', { class: 'primary', onclick: () => dubSession(lines.filter(l => !done.has(l.id))) }, icon('mic'), 'Dub missing lines'),
     h('button', { onclick: () => dubSession(lines) }, 'Re-dub everything'),
   );
   const tip = h('p', { class: 'muted' }, 'Tip: in a dub session press R to record/stop, P to play back, → or Enter for the next line. Use headphones so the robot voice preview isn’t recorded.');
 
   const cards = Object.entries(S.story.scenes).map(([sid, sc]) => h('div', { class: 'card' },
     h('h3', {}, sc.title || sid,
-      h('button', { onclick: () => dubSession(sc.lines.map(l => ({ ...l, sid }))) }, '● Dub this scene')),
+      h('button', { onclick: () => dubSession(sc.lines.map(l => ({ ...l, sid }))) }, icon('mic'), 'Dub this scene')),
     sc.lines.map(l => lineRow(l, done.has(l.id)))));
 
   $view.replaceChildren(head, tip, ...cards);
@@ -369,25 +370,25 @@ async function renderDub() {
 function lineRow(line, has) {
   const c = charOf(line.speaker);
   const fallback = isAI(c.voice) ? 'AI voice' : 'robot';
-  const status = h('span', { class: 'status' + (has ? ' done' : isAI(c.voice) ? ' ai' : '') }, has ? '✓ dubbed' : fallback);
+  const status = h('span', { class: 'status' + (has ? ' done' : isAI(c.voice) ? ' ai' : '') }, has ? 'Dubbed' : fallback);
   const rec = new Recorder();
   const recBtn = h('button', { class: 'rec', title: 'Record', onclick: async () => {
     if (rec.active) {
-      const blob = await rec.stop(); recBtn.classList.remove('recording'); recBtn.textContent = '● Rec';
-      await saveClip(line.id, blob); status.textContent = '✓ dubbed'; status.className = 'status done';
+      const blob = await rec.stop(); recBtn.classList.remove('recording'); recBtn.replaceChildren(icon('mic'), 'Rec');
+      await saveClip(line.id, blob); status.textContent = 'Dubbed'; status.className = 'status done';
     } else {
-      try { stopAll(); await rec.start(); recBtn.classList.add('recording'); recBtn.textContent = '■ Stop'; }
+      try { stopAll(); await rec.start(); recBtn.classList.add('recording'); recBtn.replaceChildren(icon('square'), 'Stop'); }
       catch (e) { toast(e.message || 'Mic unavailable'); }
     }
-  } }, '● Rec');
+  } }, icon('mic'), 'Rec');
   return h('div', { class: 'line-row' },
     h('div', { class: 'who', style: `color:${c.color}` }, c.name),
     h('div', {}, line.text),
     h('div', { class: 'btns' }, status, recBtn,
-      h('button', { title: 'Play', onclick: () => speakLine(line) }, '▶'),
-      h('button', { class: 'danger', title: 'Delete dub', onclick: async () => {
+      h('button', { title: 'Play', 'aria-label': 'Play', onclick: () => speakLine(line) }, icon('play')),
+      h('button', { class: 'danger', title: 'Delete dub', 'aria-label': 'Delete dub', onclick: async () => {
         await db.delClip(S.packId, line.id); status.textContent = fallback; status.className = 'status' + (isAI(c.voice) ? ' ai' : '');
-      } }, '✕')));
+      } }, icon('trash'))));
 }
 
 /** Full-screen, keyboard-driven session that walks through a list of lines. */
@@ -409,16 +410,16 @@ function dubSession(lines) {
     modal.replaceChildren(h('div', { class: 'sheet' },
       h('div', { class: 'row' },
         h('span', { class: 'muted' }, `Line ${i + 1} of ${lines.length} · ${S.story.scenes[l.sid]?.title || ''}`),
-        h('button', { onclick: close }, 'Close ✕')),
+        h('button', { onclick: close }, icon('x'), 'Close')),
       h('div', { class: 'speaker', style: `color:${c.color};font-size:18px;margin-top:10px` }, c.name),
       h('div', { class: 'big' }, l.text),
       h('div', { class: 'row' },
-        h('button', { onclick: () => go(-1) }, '← Prev'),
+        h('button', { onclick: () => go(-1) }, icon('arrowLeft'), 'Prev'),
         h('div', { style: 'display:flex;gap:8px' },
-          h('button', { class: state === 'rec' ? 'recording' : 'rec', onclick: toggleRec }, state === 'rec' ? '■ Stop (R)' : '● Record (R)'),
-          h('button', { onclick: () => speakLine(l) }, has ? '▶ Play take (P)' : '▶ Hear robot (P)')),
-        h('button', { class: 'primary', onclick: () => (i === lines.length - 1 ? close() : go(1)) }, i === lines.length - 1 ? 'Finish ✓' : 'Next →')),
-      h('p', { class: 'muted', style: 'margin:12px 0 0' }, has ? '✓ Saved. Record again to replace it.' : 'Not dubbed yet.')));
+          h('button', { class: state === 'rec' ? 'recording' : 'rec', onclick: toggleRec }, state === 'rec' ? icon('square') : icon('mic'), state === 'rec' ? 'Stop (R)' : 'Record (R)'),
+          h('button', { onclick: () => speakLine(l) }, icon('play'), has ? 'Play take (P)' : 'Hear robot (P)')),
+        h('button', { class: 'primary', onclick: () => (i === lines.length - 1 ? close() : go(1)) }, i === lines.length - 1 ? 'Finish' : 'Next', icon(i === lines.length - 1 ? 'check' : 'arrowRight'))),
+      h('p', { class: 'muted', style: 'margin:12px 0 0' }, has ? 'Saved. Record again to replace it.' : 'Not dubbed yet.')));
   }
   function keys(e) {
     if (e.repeat) return;
@@ -450,17 +451,17 @@ function renderEdit() {
       h('h3', {}, 'Scenes', h('button', { onclick: () => {
         const id = uid('s_'); st.scenes[id] = { title: 'New scene', bg: '#222', lines: [], choices: [] };
         S.editScene = id; commit(); renderEdit();
-      } }, '+ Scene')),
+      } }, 'Add scene')),
       h('div', { class: 'scene-list' }, ids.map(id => h('button', {
         class: id === S.editScene ? 'sel' : '', onclick: () => { S.editScene = id; renderEdit(); } },
-        (id === st.start ? '★ ' : '') + (st.scenes[id].title || id)))),
+        (id === st.start ? '(start) ' : '') + (st.scenes[id].title || id)))),
     ),
     charactersCard(),
     h('div', { class: 'card' },
       h('h3', {}, 'Story file'),
       h('div', { class: 'toolbar' },
-        h('button', { onclick: () => download(slug(st.title) + '.story.json', JSON.stringify({ format: STORY_FORMAT, version: 1, story: st }, null, 2)) }, '⬇ Export'),
-        h('button', { onclick: importStory }, '⬆ Import'),
+        h('button', { onclick: () => download(slug(st.title) + '.story.json', JSON.stringify({ format: STORY_FORMAT, version: 1, story: st }, null, 2)) }, icon('download'), 'Export'),
+        h('button', { onclick: importStory }, icon('upload'), 'Import'),
         h('button', { class: 'danger', onclick: () => { if (confirm('Replace your story with the sample? (Dubs stay saved.)')) { S.story = sampleStory(); commit(); renderEdit(); } } }, 'Load sample'))),
   );
 
@@ -488,21 +489,21 @@ function sceneEditor(id) {
 
     h('h3', {}, 'Lines', h('button', { onclick: () => {
       sc.lines.push({ id: uid('l_'), speaker: Object.keys(st.characters)[0], text: '' }); commit(); renderEdit();
-    } }, '+ Line')),
+    } }, 'Add line')),
     sc.lines.map((l, n) => h('div', { class: 'edit-line' },
       h('select', { onchange: e => { l.speaker = e.target.value; commit(); } }, charOpts(l.speaker)),
       h('textarea', { value: l.text, oninput: e => { l.text = e.target.value; commit(); } }),
       h('div', { class: 'btns', style: 'display:flex;gap:4px' },
-        h('button', { title: 'Move up', onclick: () => { if (n) { [sc.lines[n - 1], sc.lines[n]] = [sc.lines[n], sc.lines[n - 1]]; commit(); renderEdit(); } } }, '↑'),
-        h('button', { class: 'danger', title: 'Delete', onclick: () => { sc.lines.splice(n, 1); commit(); renderEdit(); } }, '✕')))),
+        h('button', { title: 'Move up', 'aria-label': 'Move up', onclick: () => { if (n) { [sc.lines[n - 1], sc.lines[n]] = [sc.lines[n], sc.lines[n - 1]]; commit(); renderEdit(); } } }, '↑'),
+        h('button', { class: 'danger', title: 'Delete', 'aria-label': 'Delete line', onclick: () => { sc.lines.splice(n, 1); commit(); renderEdit(); } }, icon('trash'))))),
 
     h('h3', {}, 'Choices (none = ending)', h('button', { onclick: () => {
       sc.choices.push({ text: 'New choice', to: id }); commit(); renderEdit();
-    } }, '+ Choice')),
+    } }, 'Add choice')),
     sc.choices.map((c, n) => h('div', { class: 'edit-choice' },
       h('input', { type: 'text', value: c.text, oninput: e => { c.text = e.target.value; commit(); } }),
       h('select', { onchange: e => { c.to = e.target.value; commit(); } }, sceneOpts(c.to)),
-      h('button', { class: 'danger', onclick: () => { sc.choices.splice(n, 1); commit(); renderEdit(); } }, '✕'))),
+      h('button', { class: 'danger', 'aria-label': 'Delete choice', onclick: () => { sc.choices.splice(n, 1); commit(); renderEdit(); } }, icon('trash')))),
   );
 }
 
@@ -513,12 +514,12 @@ function charactersCard() {
     return h('div', { class: 'r' },
       h('span', { style: 'flex:1;min-width:0' }, Voices.labelOf(c.voice), ' ',
         isAI(c.voice) ? h('span', { class: 'tag' + (lic.ok ? '' : ' warn') }, lic.tag) : null),
-      h('button', { onclick: () => openVoicePicker(c) }, '🎙 Choose voice'));
+      h('button', { onclick: () => openVoicePicker(c) }, icon('mic'), 'Choose voice'));
   };
   return h('div', { class: 'card' },
     h('h3', {}, 'Characters', h('button', { onclick: () => {
       st.characters[uid('c_')] = { name: 'New character', color: '#c9a0ff', voice: { pitch: 1, rate: 1, name: '' } }; commit(); renderEdit();
-    } }, '+ Character')),
+    } }, 'Add character')),
     Object.entries(st.characters).map(([cid, c]) => {
       c.voice ||= { pitch: 1, rate: 1, name: '' };
       return h('div', { class: 'char-row' },
@@ -528,13 +529,14 @@ function charactersCard() {
           h('button', { class: 'danger', onclick: () => {
             if (allLines().some(l => l.speaker === cid)) return toast('This character still has lines');
             delete st.characters[cid]; commit(); renderEdit();
-          } }, '✕')),
+          } }, icon('trash'))),
         voiceSel(c),
-        h('div', { class: 'r muted' }, 'pitch',
-          h('input', { type: 'range', min: 0.1, max: 2, step: 0.1, value: c.voice.pitch, oninput: e => { c.voice.pitch = +e.target.value; commit(); } }),
-          'speed',
-          h('input', { type: 'range', min: 0.5, max: 1.6, step: 0.05, value: c.voice.rate, oninput: e => { c.voice.rate = +e.target.value; commit(); } }),
-          h('button', { onclick: () => speakWith(c.voice, `Hi, I'm ${c.name}.`) }, '▶')));
+        h('div', { class: 'r muted' },
+          h('label', { class: 'vsl' }, 'pitch',
+            h('input', { type: 'range', min: 0.1, max: 2, step: 0.1, value: c.voice.pitch, oninput: e => { c.voice.pitch = +e.target.value; commit(); } })),
+          h('label', { class: 'vsl' }, 'speed',
+            h('input', { type: 'range', min: 0.5, max: 1.6, step: 0.05, value: c.voice.rate, oninput: e => { c.voice.rate = +e.target.value; commit(); } })),
+          h('button', { 'aria-label': 'Hear voice', onclick: () => speakWith(c.voice, `Hi, I'm ${c.name}.`) }, icon('play'))));
     }));
 }
 
@@ -560,11 +562,11 @@ function openVoicePicker(c, onSave) {
         h('p', { class: 'muted' }, 'Built into your browser. Instant, no download, but sounds robotic. Voices differ per device.'),
         h('div', { class: 'vp-row' + (sel.engine === 'robot' && !sel.name ? ' sel' : '') },
           h('span', { class: 'nm' }, 'Default browser voice'),
-          h('button', { onclick: () => preview({ engine: 'robot' }) }, '▶'),
+          h('button', { 'aria-label': 'Preview', onclick: () => preview({ engine: 'robot' }) }, icon('play')),
           h('button', { onclick: () => pick({ engine: 'robot', name: '' }) }, 'Select')),
         voices.map(v => h('div', { class: 'vp-row' + (sel.engine === 'robot' && sel.name === v.name ? ' sel' : '') },
           h('span', { class: 'nm' }, v.name, ' ', h('span', { class: 'meta' }, v.lang)),
-          h('button', { onclick: () => preview({ engine: 'robot', name: v.name }) }, '▶'),
+          h('button', { 'aria-label': 'Preview', onclick: () => preview({ engine: 'robot', name: v.name }) }, icon('play')),
           h('button', { onclick: () => pick({ engine: 'robot', name: v.name }) }, 'Select'))));
     }
     if (tab === 'kokoro') {
@@ -573,7 +575,7 @@ function openVoicePicker(c, onSave) {
         Voices.KOKORO.map(v => h('div', { class: 'vp-row' + (isSel('kokoro', v.id) ? ' sel' : '') },
           h('span', { class: 'nm' }, v.name, ' ', h('span', { class: 'meta' }, `${v.gender === 'F' ? 'female' : 'male'} · ${v.accent} English`)),
           h('span', { class: 'tag' + (/^[AB]/.test(v.grade) ? ' good' : '') }, 'quality ' + v.grade),
-          h('button', { onclick: () => preview({ engine: 'kokoro', id: v.id }) }, '▶'),
+          h('button', { 'aria-label': 'Preview', onclick: () => preview({ engine: 'kokoro', id: v.id }) }, icon('play')),
           h('button', { onclick: () => pick({ engine: 'kokoro', id: v.id }) }, 'Select'))));
     }
     if (tab === 'piper') {
@@ -603,8 +605,8 @@ function openVoicePicker(c, onSave) {
               h('input', { type: 'number', min: 0, max: v.speakers - 1, value: sel.speaker | 0, style: 'width:72px',
                 onchange: e => { sel.speaker = Math.max(0, Math.min(v.speakers - 1, e.target.value | 0)); draw(); } }),
               v.speakerNames[sel.speaker | 0] ? ` (${v.speakerNames[sel.speaker | 0]})` : '',
-              h('button', { title: 'Random speaker', onclick: () => { sel.speaker = Math.floor(Math.random() * v.speakers); draw(); preview(sel); } }, '🎲')) : null,
-            h('button', { onclick: () => preview(spec()) }, '▶'),
+              h('button', { title: 'Random speaker', 'aria-label': 'Random speaker', onclick: () => { sel.speaker = Math.floor(Math.random() * v.speakers); draw(); preview(sel); } }, icon('dice'))) : null,
+            h('button', { 'aria-label': 'Preview', onclick: () => preview(spec()) }, icon('play')),
             on ? null : h('button', { onclick: () => pick(spec(0)) }, 'Select'));
         }));
     }
@@ -631,9 +633,9 @@ function openVoicePicker(c, onSave) {
           e.speakers > 1 ? h('span', { class: 'tag good' }, `${e.speakers} speakers`) : null,
           on && e.speakers > 1 ? h('input', { type: 'number', min: 0, max: e.speakers - 1, value: sel.speaker | 0, style: 'width:72px',
             onchange: ev => { sel.speaker = Math.max(0, Math.min(e.speakers - 1, ev.target.value | 0)); } }) : null,
-          h('button', { onclick: () => preview(on ? sel : customSpec(e)) }, '▶'),
+          h('button', { 'aria-label': 'Preview', onclick: () => preview(on ? sel : customSpec(e)) }, icon('play')),
           on ? null : h('button', { onclick: () => pick(customSpec(e)) }, 'Select'),
-          h('button', { class: 'danger', onclick: async () => { await Voices.removeCustom(e.key); draw(); } }, '✕'));
+          h('button', { class: 'danger', 'aria-label': 'Remove voice', onclick: async () => { await Voices.removeCustom(e.key); draw(); } }, icon('trash')));
       }));
   }
   const customSpec = e => ({ engine: 'piper', id: e.key, url: e.url, label: e.name, speakers: e.speakers, speaker: 0, lang: e.lang, local: true });
@@ -642,14 +644,14 @@ function openVoicePicker(c, onSave) {
     const scroll = sheet.querySelector('.vp-body')?.scrollTop || 0;
     const content = await body();
     sheet.replaceChildren(
-      h('div', { class: 'row' }, h('h3', { style: 'margin:0' }, `Voice for ${c.name}`), h('button', { onclick: close }, 'Close ✕')),
+      h('div', { class: 'row' }, h('h3', { style: 'margin:0' }, `Voice for ${c.name}`), h('button', { onclick: close }, icon('x'), 'Close')),
       h('div', { class: 'vp-tabs' }, [['robot', 'Browser robot'], ['kokoro', 'Kokoro AI (28)'], ['piper', 'Piper AI (2,700+)'], ['custom', 'Custom models']]
         .map(([k, label]) => h('button', { class: tab === k ? 'active' : '', onclick: () => { tab = k; draw(); } }, label))),
       h('div', { class: 'vp-body' }, content),
       h('div', { class: 'vp-foot' },
         h('span', {}, 'Selected: ', h('b', {}, Voices.labelOf(sel))),
         h('input', { type: 'text', value: sample, oninput: e => { sample = e.target.value; } }),
-        h('button', { onclick: () => preview(sel) }, '▶ Preview'),
+        h('button', { onclick: () => preview(sel) }, icon('play'), 'Preview'),
         h('button', { class: 'primary', onclick: () => {
           c.voice = { ...sel, ...keep() }; close();
           if (onSave) onSave(); else { saveStory(); renderEdit(); }
@@ -689,10 +691,10 @@ async function voiceLibraryCard() {
     } }, 'Delete all') : null),
     h('p', { class: 'muted' }, list.length
       ? `${list.length} model(s), ${(total / 1048576).toFixed(0)} MB on this device. They work offline once downloaded.`
-      : 'None yet. Pick an AI voice for a character in Edit → Characters; it downloads the first time it speaks.'),
+      : 'None yet. Pick an AI voice for a character in Write → Characters; it downloads the first time it speaks.'),
     list.map(d => h('div', { class: 'pack-row' },
       h('span', {}, d.name, ' ', h('span', { class: 'muted' }, `${(d.size / 1048576).toFixed(0)} MB`)),
-      h('button', { class: 'danger', onclick: async () => { await Voices.forget(d.url); renderPacks(); } }, '✕'))));
+      h('button', { class: 'danger', onclick: async () => { await Voices.forget(d.url); renderPacks(); } }, icon('trash')))));
 }
 
 /** Bake every line into a voice pack using each character's AI voice. */
@@ -706,12 +708,12 @@ function generateAIPack() {
 
   function draw() {
     sheet.replaceChildren(
-      h('div', { class: 'row' }, h('h3', { style: 'margin:0' }, '✨ Generate AI voice pack'), h('button', { onclick: close }, running ? 'Stop' : 'Close ✕')),
+      h('div', { class: 'row' }, h('h3', { style: 'margin:0' }, 'Generate AI voice pack'), h('button', { onclick: close }, running ? 'Stop' : 'Close')),
       h('p', { class: 'muted' }, 'Every line is spoken by its character’s AI voice and saved as a clip, so playback is instant and the pack can be exported as a mod.'),
       chars.map(([, c]) => h('div', { class: 'pack-row' },
         h('span', { style: `color:${c.color};font-weight:600` }, c.name),
         h('span', { class: isAI(c.voice) ? '' : 'muted' }, isAI(c.voice) ? Voices.labelOf(c.voice) : 'robot voice: will be skipped'))),
-      aiChars.length ? null : h('p', {}, '⚠ No character has an AI voice yet. Go to Edit → Characters → 🎙 Choose voice.'),
+      aiChars.length ? null : h('p', {}, 'No character has an AI voice yet. Go to Write → Characters → Choose voice.'),
       h('div', { class: 'field', style: 'margin-top:10px' },
         h('label', {}, h('input', { type: 'radio', name: 'm', checked: mode === 'fill', onchange: () => { mode = 'fill'; } }), ` Fill lines not yet dubbed in “${activePack()?.name}” (keeps your recordings)`),
         h('label', {}, h('input', { type: 'radio', name: 'm', checked: mode === 'new', onchange: () => { mode = 'new'; } }), ' Create a new pack: ',
@@ -746,10 +748,10 @@ function generateAIPack() {
     }
     running = false;
     navigator.storage?.persist?.().catch(() => {});
-    sheet.replaceChildren(h('h3', {}, '✓ Done'),
+    sheet.replaceChildren(h('h3', {}, 'Done'),
       h('p', {}, `${ok} lines voiced${fail ? `, ${fail} failed` : ''}. “${pack.name}” is now the active pack.`),
       h('div', { class: 'row' }, h('button', { onclick: close }, 'Close'),
-        h('button', { class: 'primary', onclick: () => { modal.remove(); setTab('play'); } }, '▶ Play it')));
+        h('button', { class: 'primary', onclick: () => { modal.remove(); navigate('#/story'); } }, icon('play'), 'Play it')));
   }
   draw();
 }
@@ -765,11 +767,11 @@ async function renderPacks() {
       h('div', { class: 'btns' },
         p.id !== S.packId ? h('button', { onclick: () => { S.packId = p.id; store.set('cv.pack', p.id); renderPacks(); } }, 'Use') : null,
         h('button', { onclick: () => editPackMeta(p) }, 'Details'),
-        h('button', { onclick: () => exportPack(p) }, '⬇ Export'),
+        h('button', { onclick: () => exportPack(p) }, icon('download'), 'Export'),
         h('button', { class: 'danger', onclick: async () => {
           if (!confirm(`Delete "${p.name}" and all its recordings?`)) return;
           await db.delPack(p.id); renderPacks();
-        } }, '✕')));
+        } }, icon('trash'))));
   }));
 
   const est = await navigator.storage?.estimate?.().catch(() => null);
@@ -781,10 +783,10 @@ async function renderPacks() {
             const name = prompt('Name for the new voice pack:', 'New pack'); if (!name) return;
             const p = { id: uid('p_'), name, author: '', license: 'CC-BY-4.0', credits: '', created: Date.now() };
             await db.putPack(p); S.packId = p.id; store.set('cv.pack', p.id); renderPacks();
-          } }, '+ New pack'),
-          h('button', { onclick: generateAIPack }, '✨ Generate AI voice pack'),
-          h('button', { class: 'primary', onclick: importPack }, '⬆ Import pack'))),
-      h('p', { class: 'muted' }, 'A voice pack is a set of recordings for one story. Switch packs to hear different casts. Export packs to back them up or share them as mods. AI packs are made from the voices you pick for each character in Edit → Characters.'),
+          } }, icon('plus'), 'New pack'),
+          h('button', { onclick: generateAIPack }, icon('sparkles'), 'Generate AI voice pack'),
+          h('button', { class: 'primary', onclick: importPack }, icon('upload'), 'Import pack'))),
+      h('p', { class: 'muted' }, 'A voice pack is a set of recordings for one story. Switch packs to hear different casts. Export packs to back them up or share them as mods. AI packs are made from the voices you pick for each character in Write → Characters.'),
       rows),
     await voiceLibraryCard(),
     h('div', { class: 'card muted' },
@@ -859,18 +861,83 @@ async function importPack() {
   } catch (e) { toast('Import failed: ' + e.message); }
 }
 
-// ---------------------------------------------------------------- tabs + boot
+// ---------------------------------------------------------------- router (hash based) + boot
+// Routes: #/ home · #/packs · #/pack/<key> · #/play/<key>/<n> · #/results/<key> (game.js), #/make (scenes.js),
+// #/story[/dub|/edit|/voices] (Story mode, below).
 const RENDER = { play: renderPlay, dub: renderDub, edit: renderEdit, packs: renderPacks };
+const ROUTES = {};
+let curRoute = null;
+const STORY_TABS = [['play', '', 'Play', 'play'], ['dub', 'dub', 'Record', 'mic'], ['edit', 'edit', 'Write', 'pencil'], ['packs', 'voices', 'Voice packs', 'package']];
+
 function setTab(tab) {
   if (!RENDER[tab]) { toast('That section isn\'t available (it failed to load).'); return; }
-  try { window.onTabLeave?.(); } catch (e) { console.error('onTabLeave failed', e); }
   S.tab = tab; stopAll();
   if (tab !== 'dub') releaseMic();
-  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
   RENDER[tab]();
 }
-document.getElementById('tabs').addEventListener('click', e => { const t = e.target.closest('button')?.dataset.tab; if (t) setTab(t); });
 
-refreshPacks().then(() => setTab(RENDER.scenes ? 'scenes' : 'play')).catch(err => {
-  $view.replaceChildren(h('p', {}, 'Could not open browser storage (private mode?). ', String(err)));
+ROUTES.story = {
+  nav: 'story',
+  render(sub = '') {
+    const tab = (STORY_TABS.find(t => t[1] === sub) || STORY_TABS[0])[0];
+    const inner = h('div', { class: 'story-body' });
+    $main.replaceChildren(h('div', { class: 'page story-page' },
+      h('div', { class: 'page-head' },
+        h('div', {}, h('p', { class: 'eyebrow' }, 'Story mode'),
+          h('h1', { class: 'page-title' }, 'Voice a branching story'),
+          h('p', { class: 'muted' }, 'Write a choose-your-path story, record every line yourself or give characters AI voices, then play it.')),
+        h('div', { class: 'seg', 'aria-label': 'Story mode sections' },
+          STORY_TABS.map(([k, part, label, ic]) => h('a', { class: 'seg-btn' + (k === tab ? ' active' : ''),
+            'aria-current': k === tab ? 'page' : null, href: '#/story' + (part ? '/' + part : '') }, icon(ic), label)))),
+      inner));
+    $view = inner;
+    setTab(tab);
+  },
+};
+
+function navigate(hash) { if (location.hash === hash) route(); else location.hash = hash; }
+function parseHash() {
+  const [name = '', ...args] = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean)
+    .map(x => { try { return decodeURIComponent(x); } catch { return x; } });
+  return { name: ROUTES[name] ? name : '', args };
+}
+function route() {
+  const { name, args } = parseHash();
+  const r = ROUTES[name];
+  if (!r) return;
+  try { window.onTabLeave?.(); } catch (e) { console.error('onTabLeave failed', e); }
+  try { curRoute?.leave?.(name, args); } catch (e) { console.error('route leave failed', e); }
+  [...document.querySelectorAll('.modal')].forEach(m => m.remove());
+  stopAll();
+  curRoute = r; S.tab = r.tab || name || 'home';
+  if (name !== 'story') releaseMic();
+  document.body.dataset.route = name || 'home';
+  document.body.classList.toggle('immersive', !!r.immersive);
+  document.querySelectorAll('#nav a').forEach(a => {
+    const on = a.dataset.nav === (r.nav || name || 'home');
+    a.classList.toggle('active', on);
+    if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+  });
+  setNavOpen(false);
+  $view = $main;
+  $main.classList.remove('enter'); void $main.offsetWidth; $main.classList.add('enter');
+  window.scrollTo(0, 0);
+  try { r.render(...args); } catch (e) { console.error(e); $main.replaceChildren(h('div', { class: 'page' }, h('p', {}, 'Something went wrong: ' + (e.message || e)))); }
+}
+window.addEventListener('hashchange', route);
+
+// header: logo + collapsing nav on phones
+const navToggle = document.querySelector('.nav-toggle');
+function setNavOpen(open) {
+  document.body.classList.toggle('nav-open', open);
+  navToggle.setAttribute('aria-expanded', String(open));
+  navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  navToggle.replaceChildren(icon(open ? 'x' : 'menu'));
+}
+navToggle.addEventListener('click', () => setNavOpen(!document.body.classList.contains('nav-open')));
+document.querySelector('.brand-mark').append(logoMark(30));
+setNavOpen(false);
+
+refreshPacks().then(route).catch(err => {
+  $main.replaceChildren(h('div', { class: 'page' }, h('p', {}, 'Could not open browser storage (private mode?). ', String(err))));
 });

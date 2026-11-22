@@ -1,6 +1,13 @@
 # DubDojo
 
-Dub scenes from movies, series and anime with your own voice. You get a timing score for each line, and AI voices can read the parts you don't record. When you're done, export the dubbed video or share your work as a dub pack.
+A free dubbing game in the browser: pick a scene, record each line with your own voice, get a sync score and a belt, and download your dub.
+
+**How it plays**
+1. **Home** – hit *Play now* (straight into an easy anime-style scene) or pick one of 15 starter packs (open-licensed films from Wikimedia Commons).
+2. **Pack intro** – watch the scene, choose to dub every role or one character (the others keep the original voice, or an AI voice).
+3. **Booth** – one line at a time: *Replay* hears the original, *Record* counts 3-2-1 and plays the scene with the original voice muted while you speak (no headphones needed), then you get a score and your waveform against the line window. Keys: R record, Space play, O original, Enter next.
+4. **Results** – total score and belt (White → Black), your dub plays inline, redo any line, download the video (with credits) or share it.
+5. **Make a pack** – the editor: load a video file, link or YouTube clip, import subtitles or auto-script with Whisper, set characters, AI voices and a clip range, export/import `.dubpack.zip`, then *Play this pack*.
 
 **Story mode** is also included: write branching stories, voice every line yourself, then play them.
 
@@ -21,7 +28,7 @@ The microphone only works over `https://` or on `localhost`. Opening the file di
 
 ## Content policy
 - Bring your own clips, for personal use. DubDojo doesn't bundle any copyrighted media.
-- The only bundled sample is the *Sintel* trailer (CC-BY 3.0, © Blender Foundation).
+- The starter packs use open-licensed films only (CC BY / CC BY-SA, see [CREDITS.md](CREDITS.md)); the video streams from Wikimedia Commons.
 - Only share a dub pack publicly if you have the rights to everything in it: the clip, the voices and the script.
 - Don't clone a real person's voice without their consent.
 
@@ -37,7 +44,7 @@ The phonemizers used by both Piper and Kokoro are built on eSpeak NG, which is G
 Stories and settings are saved in `localStorage`, and recordings in IndexedDB (`dubdojo`). Export your packs to back them up: Safari can delete site data after 7 days without a visit.
 
 ## Roadmap
-1. A pack browser that reads the hub's catalog
+1. A community pack catalog
 2. Multiplayer co-op dubbing
 3. Better scoring (pitch and emotion, not only timing)
 4. Mobile polish

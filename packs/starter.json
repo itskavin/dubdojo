@@ -1,0 +1,1847 @@
+{
+ "format": "dubdojo-starter",
+ "version": 1,
+ "packs": [
+  {
+   "id": "morevna-government-agent",
+   "title": "Morevna: Government Agent",
+   "film": "Morevna Episode 3: Underground (English, v3.0.2)",
+   "style": "anime",
+   "difficulty": "easy",
+   "videoUrl": "https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a7/Morevna_Episode_3.0.2_%28English%29.webm/Morevna_Episode_3.0.2_%28English%29.webm.480p.vp9.webm",
+   "videoBytes": 36044326,
+   "clipStart": 25.8,
+   "clipEnd": 72.5,
+   "license": "CC BY-SA 4.0",
+   "shareAlike": true,
+   "attribution": "Morevna Episode 3 \"Underground\" (English, v3.0.2) by Morevna Project (morevnaproject.org) in association with \"Adamant\" Art School of Gorno-Altaisk, licensed CC BY-SA 4.0. Music: Mattias Westlund, Kevin MacLeod (incompetech.com), The Vegetarians, Radio Nowhere, Geigermeister, Deadly Past, Grégoire Lourme, Other Noises, Per Kiilstofte (CC BY / CC BY-SA)",
+   "sourcePage": "https://commons.wikimedia.org/wiki/File:Morevna_Episode_3.0.2_(English).webm",
+   "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Morevna_Episode_3.0.2_%28English%29.webm/960px-seek%3D56-Morevna_Episode_3.0.2_%28English%29.webm.jpg",
+   "thumbAt": 56,
+   "characters": [
+    {
+     "id": "hawk",
+     "name": "Hawk",
+     "color": "#ff8a4c",
+     "voice": {
+      "engine": "kokoro",
+      "id": "am_fenrir",
+      "rate": 1,
+      "pitch": 1
+     }
+    },
+    {
+     "id": "ivan",
+     "name": "Ivan",
+     "color": "#5cc8ff",
+     "voice": {
+      "engine": "kokoro",
+      "id": "am_puck",
+      "rate": 1,
+      "pitch": 1
+     }
+    }
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "start": 26.4,
+     "end": 30.4,
+     "speaker": "hawk",
+     "text": "\"Falcon\", \"Falcon\", respond. This is \"Hawk\". What's your status?"
+    },
+    {
+     "id": "l2",
+     "start": 55.0,
+     "end": 57.68,
+     "speaker": "ivan",
+     "text": "Hey officer, can I help you somehow?"
+    },
+    {
+     "id": "l3",
+     "start": 59.92,
+     "end": 61.56,
+     "speaker": "hawk",
+     "text": "Stay away, stay away!"
+    },
+    {
+     "id": "l4",
+     "start": 61.72,
+     "end": 63.6,
+     "speaker": "hawk",
+     "text": "I am a government agent!"
+    },
+    {
+     "id": "l5",
+     "start": 64.56,
+     "end": 67.12,
+     "speaker": "ivan",
+     "text": "I know, I know..."
+    },
+    {
+     "id": "l6",
+     "start": 67.84,
+     "end": 70.56,
+     "speaker": "ivan",
+     "text": "And I am the owner of this mansion."
+    }
+   ]
+  },
+  {
+   "id": "morevna-spread-your-wings",
+   "title": "Morevna: Spread Your Wings",
+   "film": "Morevna Episode 3: Underground (English, v3.0.2)",
+   "style": "anime",
+   "difficulty": "medium",
+   "videoUrl": "https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a7/Morevna_Episode_3.0.2_%28English%29.webm/Morevna_Episode_3.0.2_%28English%29.webm.480p.vp9.webm",
+   "videoBytes": 36044326,
+   "clipStart": 98.8,
+   "clipEnd": 122.45,
+   "license": "CC BY-SA 4.0",
+   "shareAlike": true,
+   "attribution": "Morevna Episode 3 \"Underground\" (English, v3.0.2) by Morevna Project (morevnaproject.org) in association with \"Adamant\" Art School of Gorno-Altaisk, licensed CC BY-SA 4.0. Music: Mattias Westlund, Kevin MacLeod (incompetech.com), The Vegetarians, Radio Nowhere, Geigermeister, Deadly Past, Grégoire Lourme, Other Noises, Per Kiilstofte (CC BY / CC BY-SA)",
+   "sourcePage": "https://commons.wikimedia.org/wiki/File:Morevna_Episode_3.0.2_(English).webm",
+   "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Morevna_Episode_3.0.2_%28English%29.webm/960px-seek%3D111-Morevna_Episode_3.0.2_%28English%29.webm.jpg",
+   "thumbAt": 111,
+   "characters": [
+    {
+     "id": "ivan",
+     "name": "Ivan",
+     "color": "#ff8a4c",
+     "voice": {
+      "engine": "kokoro",
+      "id": "am_puck",
+      "rate": 1,
+      "pitch": 1
+     }
+    },
+    {
+     "id": "marya",
+     "name": "Marya Morevna",
+     "color": "#5cc8ff",
+     "voice": {
+      "engine": "kokoro",
+      "id": "af_bella",
+      "rate": 1,
+      "pitch": 1
+     }
+    },
+    {
+     "id": "hawk",
+     "name": "Hawk",
+     "color": "#c79bff",
+     "voice": {
+      "engine": "kokoro",
+      "id": "am_fenrir",
+      "rate": 1,
+      "pitch": 1
+     }
+    }
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "start": 99.48,
+     "end": 105.04,
+     "speaker": "ivan",
+     "text": "Ah, Marya Morevna, I just don't get it. We aren't that rich..."
+    },
+    {
+     "id": "l2",
+     "start": 105.8,
+     "end": 109.56,
+     "speaker": "ivan",
+     "text": "...but they are coming here like bees to a..."
+    },
+    {
+     "id": "l3",
+     "start": 109.8,
+     "end": 111.36,
+     "speaker": "ivan",
+     "text": "...honeypot!"
+    },
+    {
+     "id": "l4",
+     "start": 111.8,
+     "end": 113.56,
+     "speaker": "hawk",
+     "text": "I am not a bee, I am a \"Hawk\"."
+    },
+    {
+     "id": "l5",
+     "start": 113.84,
+     "end": 115.6,
+     "speaker": "ivan",
+     "text": "Spread your wings, Hawk."
+    },
+    {
+     "id": "l6",
+     "start": 118.36,
+     "end": 120.36,
+     "speaker": "marya",
+     "text": "But it seems like you're having fun."
+    },
+    {
+     "id": "l7",
+     "start": 120.64,
+     "end": 122.2,
+     "speaker": "ivan",
+     "text": "Of course I am!"
+    }
+   ]
+  },
+  {
+   "id": "morevna-forbidden-key",
+   "title": "Morevna: The Forbidden Key",
+   "film": "Morevna Episode 3: Underground (English, v3.0.2)",
+   "style": "anime",
+   "difficulty": "hard",
+   "videoUrl": "https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a7/Morevna_Episode_3.0.2_%28English%29.webm/Morevna_Episode_3.0.2_%28English%29.webm.480p.vp9.webm",
+   "videoBytes": 36044326,
+   "clipStart": 140.6,
+   "clipEnd": 172.8,
+   "license": "CC BY-SA 4.0",
+   "shareAlike": true,
+   "attribution": "Morevna Episode 3 \"Underground\" (English, v3.0.2) by Morevna Project (morevnaproject.org) in association with \"Adamant\" Art School of Gorno-Altaisk, licensed CC BY-SA 4.0. Music: Mattias Westlund, Kevin MacLeod (incompetech.com), The Vegetarians, Radio Nowhere, Geigermeister, Deadly Past, Grégoire Lourme, Other Noises, Per Kiilstofte (CC BY / CC BY-SA)",
+   "sourcePage": "https://commons.wikimedia.org/wiki/File:Morevna_Episode_3.0.2_(English).webm",
+   "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Morevna_Episode_3.0.2_%28English%29.webm/960px-seek%3D156-Morevna_Episode_3.0.2_%28English%29.webm.jpg",
+   "thumbAt": 156,
+   "characters": [
+    {
+     "id": "ivan",
+     "name": "Ivan",
+     "color": "#ff8a4c",
+     "voice": {
+      "engine": "kokoro",
+      "id": "am_puck",
+      "rate": 1,
+      "pitch": 1
+     }
+    },
+    {
+     "id": "marya",
+     "name": "Marya Morevna",
+     "color": "#5cc8ff",
+     "voice": {
+      "engine": "kokoro",
+      "id": "af_bella",
+      "rate": 1,
+      "pitch": 1
+     }
+    }
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "start": 141.16,
+     "end": 144.72,
+     "speaker": "ivan",
+     "text": "I just can't figure out what you did to them if they're after you so much..."
+    },
+    {
+     "id": "l2",
+     "start": 145.16,
+     "end": 147.16,
+     "speaker": "marya",
+     "text": "I have no idea."
+    },
+    {
+     "id": "l3",
+     "start": 147.72,
+     "end": 149.28,
+     "speaker": "ivan",
+     "text": "Going somewhere?"
+    },
+    {
+     "id": "l4",
+     "start": 149.6,
+     "end": 152.24,
+     "speaker": "marya",
+     "text": "I am going to a biker party, and I won't be back until tomorrow."
+    },
+    {
+     "id": "l5",
+     "start": 152.44,
+     "end": 155.16,
+     "speaker": "marya",
+     "text": "Dinner on plate, firewood in shed, dog food under sink..."
+    },
+    {
+     "id": "l6",
+     "start": 155.44,
+     "end": 156.68,
+     "speaker": "ivan",
+     "text": "Do we have dogs here?"
+    },
+    {
+     "id": "l7",
+     "start": 156.92,
+     "end": 161.68,
+     "speaker": "marya",
+     "text": "...in case of a power outage, turn on the electric generator and don't forget to restart the air defense system."
+    },
+    {
+     "id": "l8",
+     "start": 161.88,
+     "end": 164.12,
+     "speaker": "marya",
+     "text": "Here are the keys to all of the doors in the mansion."
+    },
+    {
+     "id": "l9",
+     "start": 164.24,
+     "end": 168.56,
+     "speaker": "marya",
+     "text": "Feel free to go anywhere, but don't touch this key and don't unlock the door."
+    },
+    {
+     "id": "l10",
+     "start": 168.84,
+     "end": 169.6,
+     "speaker": "ivan",
+     "text": "But why?"
+    },
+    {
+     "id": "l11",
+     "start": 169.84,
+     "end": 172.16,
+     "speaker": "marya",
+     "text": "Just don't!"
+    }
+   ]
+  },
+  {
+   "id": "pepper-shichimi-forfeits",
+   "title": "Pepper&Carrot: Too Dangerous!",
+   "film": "Pepper&Carrot Episode 6: The Potion Contest (animated)",
+   "style": "animation",
+   "difficulty": "medium",
+   "videoUrl": "https://upload.wikimedia.org/wikipedia/commons/transcoded/7/79/Morevna_Project_-_Pepper%26Carrot_%28animated_comic%29_-_Episode_6_-_The_Potion_Contest.webm/Morevna_Project_-_Pepper%26Carrot_%28animated_comic%29_-_Episode_6_-_The_Potion_Contest.webm.480p.vp9.webm",
+   "videoBytes": 40215001,
+   "clipStart": 258.3,
+   "clipEnd": 292.0,
+   "license": "CC BY-SA 4.0",
+   "shareAlike": true,
+   "attribution": "Pepper&Carrot Episode 6 \"The Potion Contest\" (animated) by Morevna Project (morevnaproject.org) in association with Ethic Cinema, music by Grégoire Lourme, based on the webcomic by David Revoy (peppercarrot.com); licensed CC BY-SA 4.0",
+   "sourcePage": "https://commons.wikimedia.org/wiki/File:Morevna_Project_-_Pepper%26Carrot_(animated_comic)_-_Episode_6_-_The_Potion_Contest.webm",
+   "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Morevna_Project_-_Pepper%26Carrot_%28animated_comic%29_-_Episode_6_-_The_Potion_Contest.webm/960px-seek%3D275-Morevna_Project_-_Pepper%26Carrot_%28animated_comic%29_-_Episode_6_-_The_Potion_Contest.webm.jpg",
+   "thumbAt": 275,
+   "characters": [
+    {
+     "id": "shichimi",
+     "name": "Shichimi",
+     "color": "#ff8a4c",
+     "voice": {
+      "engine": "kokoro",
+      "id": "af_nicole",
+      "rate": 1,
+      "pitch": 1
+     }
+    },
+    {
+     "id": "mayor",
+     "name": "Mayor of Komona",
+     "color": "#5cc8ff",
+     "voice": {
+      "engine": "kokoro",
+      "id": "bm_george",
+      "rate": 1,
+      "pitch": 1
+     }
+    },
+    {
+     "id": "saffron",
+     "name": "Saffron",
+     "color": "#c79bff",
+     "voice": {
+      "engine": "kokoro",
+      "id": "bf_emma",
+      "rate": 1,
+      "pitch": 1
+     }
+    }
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "start": 258.83,
+     "end": 262.7,
+     "speaker": "shichimi",
+     "text": "I... I did not know we had to give a demonstration."
+    },
+    {
+     "id": "l2",
+     "start": 263.04,
+     "end": 264.37,
+     "speaker": "mayor",
+     "text": "Come on Shichimi!"
+    },
+    {
+     "id": "l3",
+     "start": 264.42,
+     "end": 265.79,
+     "speaker": "mayor",
+     "text": "Everyone's waiting for you!"
+    },
+    {
+     "id": "l4",
+     "start": 266.33,
+     "end": 267.17,
+     "speaker": "shichimi",
+     "text": "No!.."
+    },
+    {
+     "id": "l5",
+     "start": 267.58,
+     "end": 268.12,
+     "speaker": "shichimi",
+     "text": "I cannot!.."
+    },
+    {
+     "id": "l6",
+     "start": 268.46,
+     "end": 270.2,
+     "speaker": "shichimi",
+     "text": "It is too dangerous!.."
+    },
+    {
+     "id": "l7",
+     "start": 270.4,
+     "end": 271.64,
+     "speaker": "shichimi",
+     "text": "S-sorry!.."
+    },
+    {
+     "id": "l8",
+     "start": 272.37,
+     "end": 273.75,
+     "speaker": "mayor",
+     "text": "Ladies and gentlemen..."
+    },
+    {
+     "id": "l9",
+     "start": 274.0,
+     "end": 275.5,
+     "speaker": "mayor",
+     "text": "...it seems that Shichimi forfeits..."
+    },
+    {
+     "id": "l10",
+     "start": 275.54,
+     "end": 276.42,
+     "speaker": "saffron",
+     "text": "Give me that!"
+    },
+    {
+     "id": "l11",
+     "start": 276.58,
+     "end": 277.37,
+     "speaker": "shichimi",
+     "text": "CAREFUL!!!"
+    },
+    {
+     "id": "l12",
+     "start": 277.66,
+     "end": 279.48,
+     "speaker": "saffron",
+     "text": "What could be so dangerous?"
+    },
+    {
+     "id": "l13",
+     "start": 279.68,
+     "end": 283.46,
+     "speaker": "saffron",
+     "text": "You're just scared because your potion isn't as fantastic as mine!"
+    },
+    {
+     "id": "l14",
+     "start": 284.58,
+     "end": 286.9,
+     "speaker": "shichimi",
+     "text": "No-no, it is a potion of..."
+    },
+    {
+     "id": "l15",
+     "start": 287.96,
+     "end": 290.84,
+     "speaker": "shichimi",
+     "text": "...GIANT MONSTERS!!!"
+    }
+   ]
+  },
+  {
+   "id": "pepper-wonderful-potion",
+   "title": "Pepper&Carrot: A Wonderful Potion",
+   "film": "Pepper&Carrot Episode 6: The Potion Contest (animated)",
+   "style": "animation",
+   "difficulty": "easy",
+   "videoUrl": "https://upload.wikimedia.org/wikipedia/commons/transcoded/7/79/Morevna_Project_-_Pepper%26Carrot_%28animated_comic%29_-_Episode_6_-_The_Potion_Contest.webm/Morevna_Project_-_Pepper%26Carrot_%28animated_comic%29_-_Episode_6_-_The_Potion_Contest.webm.480p.vp9.webm",
+   "videoBytes": 40215001,
+   "clipStart": 374.6,
+   "clipEnd": 397.0,
+   "license": "CC BY-SA 4.0",
+   "shareAlike": true,
+   "attribution": "Pepper&Carrot Episode 6 \"The Potion Contest\" (animated) by Morevna Project (morevnaproject.org) in association with Ethic Cinema, music by Grégoire Lourme, based on the webcomic by David Revoy (peppercarrot.com); licensed CC BY-SA 4.0",
+   "sourcePage": "https://commons.wikimedia.org/wiki/File:Morevna_Project_-_Pepper%26Carrot_(animated_comic)_-_Episode_6_-_The_Potion_Contest.webm",
+   "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Morevna_Project_-_Pepper%26Carrot_%28animated_comic%29_-_Episode_6_-_The_Potion_Contest.webm/960px-seek%3D387-Morevna_Project_-_Pepper%26Carrot_%28animated_comic%29_-_Episode_6_-_The_Potion_Contest.webm.jpg",
+   "thumbAt": 387,
+   "characters": [
+    {
+     "id": "mayor",
+     "name": "Mayor of Komona",
+     "color": "#ff8a4c",
+     "voice": {
+      "engine": "kokoro",
+      "id": "bm_george",
+      "rate": 1,
+      "pitch": 1
+     }
+    },
+    {
+     "id": "pepper",
+     "name": "Pepper",
+     "color": "#5cc8ff",
+     "voice": {
+      "engine": "kokoro",
+      "id": "af_heart",
+      "rate": 1,
+      "pitch": 1
+     }
+    },
+    {
+     "id": "carrot",
+     "name": "Carrot",
+     "color": "#c79bff",
+     "voice": {
+      "engine": "kokoro",
+      "id": "am_echo",
+      "rate": 1,
+      "pitch": 1
+     }
+    }
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "start": 375.71,
+     "end": 380.74,
+     "speaker": "mayor",
+     "text": "Because she saved our town we award first place to..."
+    },
+    {
+     "id": "l2",
+     "start": 380.79,
+     "end": 383.04,
+     "speaker": "mayor",
+     "text": "...Miss Pepper!"
+    },
+    {
+     "id": "l3",
+     "start": 383.24,
+     "end": 385.28,
+     "speaker": "mayor",
+     "text": "For her wonderful potion!"
+    },
+    {
+     "id": "l4",
+     "start": 386.02,
+     "end": 387.33,
+     "speaker": "pepper",
+     "text": "Huh, in fact..."
+    },
+    {
+     "id": "l5",
+     "start": 387.58,
+     "end": 389.29,
+     "speaker": "pepper",
+     "text": "...it's not really a potion..."
+    },
+    {
+     "id": "l6",
+     "start": 389.42,
+     "end": 392.58,
+     "speaker": "pepper",
+     "text": "...it's just my cat's pee sample from his last trip to the vet!"
+    },
+    {
+     "id": "l7",
+     "start": 393.17,
+     "end": 394.17,
+     "speaker": "pepper",
+     "text": "Isn't it, Carrot?"
+    },
+    {
+     "id": "l8",
+     "start": 395.71,
+     "end": 396.42,
+     "speaker": "carrot",
+     "text": "Meow!"
+    }
+   ]
+  },
+  {
+   "id": "pepper-market-day",
+   "title": "Pepper&Carrot: Market Day",
+   "film": "Pepper&Carrot Episode 3: The Secret Ingredients (animated)",
+   "style": "animation",
+   "difficulty": "medium",
+   "videoUrl": "https://upload.wikimedia.org/wikipedia/commons/transcoded/4/46/Pepper%26Carrot_Episode_3_-_The_Secret_Ingredients.ogv/Pepper%26Carrot_Episode_3_-_The_Secret_Ingredients.ogv.480p.vp9.webm",
+   "videoBytes": 13392740,
+   "clipStart": 19.85,
+   "clipEnd": 56.5,
+   "license": "CC BY-SA 4.0",
+   "shareAlike": true,
+   "attribution": "Pepper&Carrot Episode 3 \"The Secret Ingredients\" animated by Morevna Project (morevnaproject.org), based on the webcomic by David Revoy (peppercarrot.com), licensed CC BY-SA 4.0",
+   "sourcePage": "https://commons.wikimedia.org/wiki/File:Pepper%26Carrot_Episode_3_-_The_Secret_Ingredients.ogv",
+   "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Pepper%26Carrot_Episode_3_-_The_Secret_Ingredients.ogv/960px-seek%3D37-Pepper%26Carrot_Episode_3_-_The_Secret_Ingredients.ogv.jpg",
+   "thumbAt": 37,
+   "characters": [
+    {
+     "id": "pepper",
+     "name": "Pepper",
+     "color": "#ff8a4c",
+     "voice": {
+      "engine": "kokoro",
+      "id": "af_heart",
+      "rate": 1,
+      "pitch": 1
+     }
+    },
+    {
+     "id": "merchant",
+     "name": "Merchant",
+     "color": "#5cc8ff",
+     "voice": {
+      "engine": "kokoro",
+      "id": "bm_lewis",
+      "rate": 1,
+      "pitch": 1
+     }
+    },
+    {
+     "id": "saffron",
+     "name": "Saffron",
+     "color": "#c79bff",
+     "voice": {
+      "engine": "kokoro",
+      "id": "bf_emma",
+      "rate": 1,
+      "pitch": 1
+     }
+    }
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "start": 19.944,
+     "end": 21.039,
+     "speaker": "pepper",
+     "text": "Good morning Sir."
+    },
+    {
+     "id": "l2",
+     "start": 21.677,
+     "end": 23.89,
+     "speaker": "pepper",
+     "text": "I would like eight pumpkinstars, please."
+    },
+    {
+     "id": "l3",
+     "start": 23.89,
+     "end": 25.89,
+     "speaker": "merchant",
+     "text": "Here you are, that's 60 Ko."
+    },
+    {
+     "id": "l4",
+     "start": 27.372,
+     "end": 28.631,
+     "speaker": "pepper",
+     "text": "Oh dear..."
+    },
+    {
+     "id": "l5",
+     "start": 28.872,
+     "end": 31.038,
+     "speaker": "pepper",
+     "text": "Sorry, I'll have to take only four..."
+    },
+    {
+     "id": "l6",
+     "start": 31.83,
+     "end": 33.038,
+     "speaker": "saffron",
+     "text": "Greetings, good Sir."
+    },
+    {
+     "id": "l7",
+     "start": 33.455,
+     "end": 36.287,
+     "speaker": "saffron",
+     "text": "Please prepare two dozen of everything for me."
+    },
+    {
+     "id": "l8",
+     "start": 36.287,
+     "end": 38.287,
+     "speaker": "saffron",
+     "text": "Premium quality, as usual."
+    },
+    {
+     "id": "l9",
+     "start": 38.287,
+     "end": 40.662,
+     "speaker": "merchant",
+     "text": "It's always a pleasure to serve you, Miss Saffron."
+    },
+    {
+     "id": "l10",
+     "start": 40.662,
+     "end": 42.296,
+     "speaker": "saffron",
+     "text": "Hey look, it's Pepper."
+    },
+    {
+     "id": "l11",
+     "start": 42.537,
+     "end": 44.62,
+     "speaker": "saffron",
+     "text": "So, how is it going in the countryside?"
+    },
+    {
+     "id": "l12",
+     "start": 44.87,
+     "end": 47.328,
+     "speaker": "saffron",
+     "text": "I imagine business is booming?"
+    },
+    {
+     "id": "l13",
+     "start": 47.328,
+     "end": 49.328,
+     "speaker": "saffron",
+     "text": "I guess you're preparing the ingredients..."
+    },
+    {
+     "id": "l14",
+     "start": 49.328,
+     "end": 51.828,
+     "speaker": "saffron",
+     "text": "...for tomorrow's potion challenge?"
+    },
+    {
+     "id": "l15",
+     "start": 52.452,
+     "end": 54.11,
+     "speaker": "pepper",
+     "text": "A potion challenge?"
+    },
+    {
+     "id": "l16",
+     "start": 54.11,
+     "end": 55.568,
+     "speaker": "pepper",
+     "text": "Tomorrow?!"
+    }
+   ]
+  },
+  {
+   "id": "sintel-gatekeeper",
+   "title": "Sintel: The Gatekeeper",
+   "film": "Sintel (2010)",
+   "style": "animation",
+   "difficulty": "medium",
+   "videoUrl": "https://upload.wikimedia.org/wikipedia/commons/transcoded/f/f1/Sintel_movie_4K.webm/Sintel_movie_4K.webm.480p.vp9.webm",
+   "videoBytes": 70387310,
+   "clipStart": 105.5,
+   "clipEnd": 157.0,
+   "license": "CC BY 3.0",
+   "shareAlike": false,
+   "attribution": "Sintel (2010) by the Blender Foundation / Durian Open Movie Project, www.sintel.org, licensed CC BY 3.0",
+   "sourcePage": "https://commons.wikimedia.org/wiki/File:Sintel_movie_4K.webm",
+   "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Sintel_movie_4K.webm/960px-seek%3D132-Sintel_movie_4K.webm.jpg",
+   "thumbAt": 132,
+   "characters": [
+    {
+     "id": "shaman",
+     "name": "Shaman",
+     "color": "#ff8a4c",
+     "voice": {
+      "engine": "kokoro",
+      "id": "bm_george",
+      "rate": 1,
+      "pitch": 1
+     }
+    },
+    {
+     "id": "sintel",
+     "name": "Sintel",
+     "color": "#5cc8ff",
+     "voice": {
+      "engine": "kokoro",
+      "id": "af_bella",
+      "rate": 1,
+      "pitch": 1
+     }
+    }
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "start": 107.25,
+     "end": 110.5,
+     "speaker": "shaman",
+     "text": "This blade has a dark past."
+    },
+    {
+     "id": "l2",
+     "start": 111.8,
+     "end": 115.8,
+     "speaker": "shaman",
+     "text": "It has shed much innocent blood."
+    },
+    {
+     "id": "l3",
+     "start": 118.0,
+     "end": 121.45,
+     "speaker": "shaman",
+     "text": "You're a fool for traveling alone, so completely unprepared."
+    },
+    {
+     "id": "l4",
+     "start": 121.75,
+     "end": 124.8,
+     "speaker": "shaman",
+     "text": "You're lucky your blood's still flowing."
+    },
+    {
+     "id": "l5",
+     "start": 125.25,
+     "end": 126.3,
+     "speaker": "sintel",
+     "text": "Thank you."
+    },
+    {
+     "id": "l6",
+     "start": 127.5,
+     "end": 129.0,
+     "speaker": "shaman",
+     "text": "So..."
+    },
+    {
+     "id": "l7",
+     "start": 129.4,
+     "end": 133.8,
+     "speaker": "shaman",
+     "text": "What brings you to the land of the gatekeepers?"
+    },
+    {
+     "id": "l8",
+     "start": 135.0,
+     "end": 137.5,
+     "speaker": "sintel",
+     "text": "I'm searching for someone."
+    },
+    {
+     "id": "l9",
+     "start": 138.0,
+     "end": 142.2,
+     "speaker": "shaman",
+     "text": "Someone very dear? A kindred spirit?"
+    },
+    {
+     "id": "l10",
+     "start": 143.4,
+     "end": 145.0,
+     "speaker": "sintel",
+     "text": "A dragon."
+    },
+    {
+     "id": "l11",
+     "start": 148.85,
+     "end": 151.75,
+     "speaker": "shaman",
+     "text": "A dangerous quest for a lone hunter."
+    },
+    {
+     "id": "l12",
+     "start": 152.95,
+     "end": 155.87,
+     "speaker": "sintel",
+     "text": "I've been alone for as long as I can remember."
+    }
+   ]
+  },
+  {
+   "id": "sintel-dragon-lands",
+   "title": "Sintel: Dragon Lands",
+   "film": "Sintel (2010)",
+   "style": "animation",
+   "difficulty": "easy",
+   "videoUrl": "https://upload.wikimedia.org/wikipedia/commons/transcoded/f/f1/Sintel_movie_4K.webm/Sintel_movie_4K.webm.480p.vp9.webm",
+   "videoBytes": 70387310,
+   "clipStart": 444.0,
+   "clipEnd": 465.5,
+   "license": "CC BY 3.0",
+   "shareAlike": false,
+   "attribution": "Sintel (2010) by the Blender Foundation / Durian Open Movie Project, www.sintel.org, licensed CC BY 3.0",
+   "sourcePage": "https://commons.wikimedia.org/wiki/File:Sintel_movie_4K.webm",
+   "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Sintel_movie_4K.webm/960px-seek%3D455-Sintel_movie_4K.webm.jpg",
+   "thumbAt": 455,
+   "characters": [
+    {
+     "id": "sintel",
+     "name": "Sintel",
+     "color": "#ff8a4c",
+     "voice": {
+      "engine": "kokoro",
+      "id": "af_bella",
+      "rate": 1,
+      "pitch": 1
+     }
+    },
+    {
+     "id": "shaman",
+     "name": "Shaman",
+     "color": "#5cc8ff",
+     "voice": {
+      "engine": "kokoro",
+      "id": "bm_george",
+      "rate": 1,
+      "pitch": 1
+     }
+    }
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "start": 445.85,
+     "end": 447.5,
+     "speaker": "sintel",
+     "text": "I have failed."
+    },
+    {
+     "id": "l2",
+     "start": 452.8,
+     "end": 456.5,
+     "speaker": "shaman",
+     "text": "You've only failed to see..."
+    },
+    {
+     "id": "l3",
+     "start": 457.8,
+     "end": 460.5,
+     "speaker": "shaman",
+     "text": "These are dragon lands, Sintel."
+    },
+    {
+     "id": "l4",
+     "start": 460.85,
+     "end": 464.0,
+     "speaker": "shaman",
+     "text": "You are closer than you know."
+    }
+   ]
+  },
+  {
+   "id": "elephants-close-your-eyes",
+   "title": "Elephants Dream: Close Your Eyes",
+   "film": "Elephants Dream (2006)",
+   "style": "animation",
+   "difficulty": "medium",
+   "videoUrl": "https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a2/Elephants_Dream_%282006%29.webm/Elephants_Dream_%282006%29.webm.480p.vp9.webm",
+   "videoBytes": 58116846,
+   "clipStart": 340.5,
+   "clipEnd": 381.0,
+   "license": "CC BY 2.5",
+   "shareAlike": false,
+   "attribution": "Elephants Dream (2006) by the Orange Open Movie Project (Blender Foundation / Netherlands Media Art Institute), orange.blender.org, licensed CC BY 2.5",
+   "sourcePage": "https://commons.wikimedia.org/wiki/File:Elephants_Dream_(2006).webm",
+   "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Elephants_Dream_%282006%29.webm/960px-seek%3D361-Elephants_Dream_%282006%29.webm.jpg",
+   "thumbAt": 361,
+   "characters": [
+    {
+     "id": "proog",
+     "name": "Proog",
+     "color": "#ff8a4c",
+     "voice": {
+      "engine": "kokoro",
+      "id": "bm_fable",
+      "rate": 1,
+      "pitch": 1
+     }
+    },
+    {
+     "id": "emo",
+     "name": "Emo",
+     "color": "#5cc8ff",
+     "voice": {
+      "engine": "kokoro",
+      "id": "am_michael",
+      "rate": 1,
+      "pitch": 1
+     }
+    }
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "start": 341.31,
+     "end": 343.42,
+     "speaker": "proog",
+     "text": "Emo, close your eyes."
+    },
+    {
+     "id": "l2",
+     "start": 344.15,
+     "end": 344.773,
+     "speaker": "emo",
+     "text": "Why?"
+    },
+    {
+     "id": "l3",
+     "start": 344.773,
+     "end": 345.396,
+     "speaker": "proog",
+     "text": "Now!"
+    },
+    {
+     "id": "l4",
+     "start": 351.15,
+     "end": 351.97,
+     "speaker": "emo",
+     "text": "OK."
+    },
+    {
+     "id": "l5",
+     "start": 353.11,
+     "end": 354.68,
+     "speaker": "proog",
+     "text": "Good."
+    },
+    {
+     "id": "l6",
+     "start": 359.42,
+     "end": 362.1,
+     "speaker": "proog",
+     "text": "What do you see at your left side, Emo?"
+    },
+    {
+     "id": "l7",
+     "start": 364.02,
+     "end": 365.01,
+     "speaker": "emo",
+     "text": "Nothing."
+    },
+    {
+     "id": "l8",
+     "start": 365.01,
+     "end": 366.0,
+     "speaker": "proog",
+     "text": "Really?"
+    },
+    {
+     "id": "l9",
+     "start": 366.0,
+     "end": 367.58,
+     "speaker": "emo",
+     "text": "No, nothing at all."
+    },
+    {
+     "id": "l10",
+     "start": 367.58,
+     "end": 371.98,
+     "speaker": "proog",
+     "text": "Really? A–And at your right? What do you see at your right side, Emo?"
+    },
+    {
+     "id": "l11",
+     "start": 373.31,
+     "end": 376.84,
+     "speaker": "emo",
+     "text": "The same, Proog. Exactly the same…"
+    },
+    {
+     "id": "l12",
+     "start": 376.84,
+     "end": 378.368,
+     "speaker": "emo",
+     "text": "…nothing!"
+    },
+    {
+     "id": "l13",
+     "start": 378.368,
+     "end": 379.896,
+     "speaker": "proog",
+     "text": "Great."
+    }
+   ]
+  },
+  {
+   "id": "elephants-beauty-of-this-place",
+   "title": "Elephants Dream: You're a Sick Man",
+   "film": "Elephants Dream (2006)",
+   "style": "animation",
+   "difficulty": "hard",
+   "videoUrl": "https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a2/Elephants_Dream_%282006%29.webm/Elephants_Dream_%282006%29.webm.480p.vp9.webm",
+   "videoBytes": 58116846,
+   "clipStart": 428.5,
+   "clipEnd": 471.5,
+   "license": "CC BY 2.5",
+   "shareAlike": false,
+   "attribution": "Elephants Dream (2006) by the Orange Open Movie Project (Blender Foundation / Netherlands Media Art Institute), orange.blender.org, licensed CC BY 2.5",
+   "sourcePage": "https://commons.wikimedia.org/wiki/File:Elephants_Dream_(2006).webm",
+   "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Elephants_Dream_%282006%29.webm/960px-seek%3D449-Elephants_Dream_%282006%29.webm.jpg",
+   "thumbAt": 449,
+   "characters": [
+    {
+     "id": "proog",
+     "name": "Proog",
+     "color": "#ff8a4c",
+     "voice": {
+      "engine": "kokoro",
+      "id": "bm_fable",
+      "rate": 1,
+      "pitch": 1
+     }
+    },
+    {
+     "id": "emo",
+     "name": "Emo",
+     "color": "#5cc8ff",
+     "voice": {
+      "engine": "kokoro",
+      "id": "am_michael",
+      "rate": 1,
+      "pitch": 1
+     }
+    }
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "start": 429.05,
+     "end": 430.08,
+     "speaker": "proog",
+     "text": "Emo?"
+    },
+    {
+     "id": "l2",
+     "start": 431.14,
+     "end": 433.08,
+     "speaker": "proog",
+     "text": "Emo, why?!"
+    },
+    {
+     "id": "l3",
+     "start": 433.08,
+     "end": 435.36,
+     "speaker": "proog",
+     "text": "Emo, why…?"
+    },
+    {
+     "id": "l4",
+     "start": 435.36,
+     "end": 438.84,
+     "speaker": "proog",
+     "text": "Why can’t you see the beauty of this place?"
+    },
+    {
+     "id": "l5",
+     "start": 438.84,
+     "end": 440.646,
+     "speaker": "proog",
+     "text": "The way it works."
+    },
+    {
+     "id": "l6",
+     "start": 440.646,
+     "end": 443.92,
+     "speaker": "proog",
+     "text": "How… How perfect it is."
+    },
+    {
+     "id": "l7",
+     "start": 443.92,
+     "end": 447.04,
+     "speaker": "emo",
+     "text": "No, Proog, I don’t see."
+    },
+    {
+     "id": "l8",
+     "start": 447.04,
+     "end": 449.97,
+     "speaker": "emo",
+     "text": "I don’t see because there’s nothing there."
+    },
+    {
+     "id": "l9",
+     "start": 451.05,
+     "end": 455.24,
+     "speaker": "emo",
+     "text": "And why should I trust my life to something that isn’t there?"
+    },
+    {
+     "id": "l10",
+     "start": 455.24,
+     "end": 456.6,
+     "speaker": "emo",
+     "text": "Well, can you tell me that?"
+    },
+    {
+     "id": "l11",
+     "start": 456.6,
+     "end": 457.38,
+     "speaker": "proog",
+     "text": "Emo…"
+    },
+    {
+     "id": "l12",
+     "start": 457.38,
+     "end": 458.92,
+     "speaker": "emo",
+     "text": "Answer me!"
+    },
+    {
+     "id": "l13",
+     "start": 462.97,
+     "end": 464.0,
+     "speaker": "emo",
+     "text": "Proog…"
+    },
+    {
+     "id": "l14",
+     "start": 465.05,
+     "end": 466.854,
+     "speaker": "emo",
+     "text": "…you’re a sick man!"
+    },
+    {
+     "id": "l15",
+     "start": 466.854,
+     "end": 468.91,
+     "speaker": "emo",
+     "text": "Stay away from me!"
+    }
+   ]
+  },
+  {
+   "id": "cosmos-lone-wolf",
+   "title": "Cosmos Laundromat: The Lone Wolf",
+   "film": "Cosmos Laundromat: First Cycle (2015)",
+   "style": "animation",
+   "difficulty": "medium",
+   "videoUrl": "https://upload.wikimedia.org/wikipedia/commons/transcoded/3/36/Cosmos_Laundromat_-_First_Cycle_-_Official_Blender_Foundation_release.webm/Cosmos_Laundromat_-_First_Cycle_-_Official_Blender_Foundation_release.webm.480p.vp9.webm",
+   "videoBytes": 82577775,
+   "clipStart": 139.5,
+   "clipEnd": 213.5,
+   "license": "CC BY-SA 3.0",
+   "shareAlike": true,
+   "attribution": "Cosmos Laundromat: First Cycle (2015) by the Blender Institute / Gooseberry Open Movie Project, gooseberry.blender.org, licensed CC BY-SA 3.0",
+   "sourcePage": "https://commons.wikimedia.org/wiki/File:Cosmos_Laundromat_-_First_Cycle_-_Official_Blender_Foundation_release.webm",
+   "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Cosmos_Laundromat_-_First_Cycle_-_Official_Blender_Foundation_release.webm/960px-seek%3D175-Cosmos_Laundromat_-_First_Cycle_-_Official_Blender_Foundation_release.webm.jpg",
+   "thumbAt": 175,
+   "characters": [
+    {
+     "id": "victor",
+     "name": "Victor",
+     "color": "#ff8a4c",
+     "voice": {
+      "engine": "kokoro",
+      "id": "am_michael",
+      "rate": 1,
+      "pitch": 1
+     }
+    },
+    {
+     "id": "franck",
+     "name": "Franck",
+     "color": "#5cc8ff",
+     "voice": {
+      "engine": "kokoro",
+      "id": "bm_george",
+      "rate": 1,
+      "pitch": 1
+     }
+    }
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "start": 140.0,
+     "end": 141.3,
+     "speaker": "victor",
+     "text": "Excuse me?"
+    },
+    {
+     "id": "l2",
+     "start": 141.8,
+     "end": 143.0,
+     "speaker": "victor",
+     "text": "Excuse me, sir?"
+    },
+    {
+     "id": "l3",
+     "start": 144.0,
+     "end": 145.5,
+     "speaker": "victor",
+     "text": "Excuse me?"
+    },
+    {
+     "id": "l4",
+     "start": 147.0,
+     "end": 149.0,
+     "speaker": "franck",
+     "text": "Oh, come on."
+    },
+    {
+     "id": "l5",
+     "start": 150.0,
+     "end": 152.042,
+     "speaker": "victor",
+     "text": "Do you have a moment, sir?"
+    },
+    {
+     "id": "l6",
+     "start": 152.125,
+     "end": 154.958,
+     "speaker": "franck",
+     "text": "I'm kind of in the middle of something here."
+    },
+    {
+     "id": "l7",
+     "start": 155.042,
+     "end": 157.0,
+     "speaker": "victor",
+     "text": "Yes? Thank you."
+    },
+    {
+     "id": "l8",
+     "start": 157.05,
+     "end": 159.326,
+     "speaker": "victor",
+     "text": "I've come a long way for you, Franck."
+    },
+    {
+     "id": "l9",
+     "start": 169.0,
+     "end": 171.0,
+     "speaker": "victor",
+     "text": "My name is Victor."
+    },
+    {
+     "id": "l10",
+     "start": 172.0,
+     "end": 174.0,
+     "speaker": "victor",
+     "text": "Hi."
+    },
+    {
+     "id": "l11",
+     "start": 174.0,
+     "end": 176.125,
+     "speaker": "victor",
+     "text": "And you are…"
+    },
+    {
+     "id": "l12",
+     "start": 177.813,
+     "end": 179.5,
+     "speaker": "victor",
+     "text": "You are Franck."
+    },
+    {
+     "id": "l13",
+     "start": 180.5,
+     "end": 184.0,
+     "speaker": "victor",
+     "text": "You are so much more than just a sheep, aren't you?"
+    },
+    {
+     "id": "l14",
+     "start": 185.0,
+     "end": 188.0,
+     "speaker": "franck",
+     "text": "Oh yeah? How would you know?"
+    },
+    {
+     "id": "l15",
+     "start": 190.346,
+     "end": 192.75,
+     "speaker": "victor",
+     "text": "Look at you. You're an adventurer, Franck."
+    },
+    {
+     "id": "l16",
+     "start": 193.958,
+     "end": 196.75,
+     "speaker": "victor",
+     "text": "Just like me, you're... a lone wolf."
+    },
+    {
+     "id": "l17",
+     "start": 198.625,
+     "end": 201.75,
+     "speaker": "victor",
+     "text": "Tell me, does one choose to be alone?"
+    },
+    {
+     "id": "l18",
+     "start": 202.917,
+     "end": 205.08,
+     "speaker": "victor",
+     "text": "No, one doesn't."
+    },
+    {
+     "id": "l19",
+     "start": 205.17,
+     "end": 207.75,
+     "speaker": "victor",
+     "text": "One doesn't even choose to be a wolf."
+    },
+    {
+     "id": "l20",
+     "start": 209.88,
+     "end": 211.0,
+     "speaker": "victor",
+     "text": "Or does one?"
+    }
+   ]
+  },
+  {
+   "id": "cosmos-best-product",
+   "title": "Cosmos Laundromat: The Best Product",
+   "film": "Cosmos Laundromat: First Cycle (2015)",
+   "style": "animation",
+   "difficulty": "easy",
+   "videoUrl": "https://upload.wikimedia.org/wikipedia/commons/transcoded/3/36/Cosmos_Laundromat_-_First_Cycle_-_Official_Blender_Foundation_release.webm/Cosmos_Laundromat_-_First_Cycle_-_Official_Blender_Foundation_release.webm.480p.vp9.webm",
+   "videoBytes": 82577775,
+   "clipStart": 264.6,
+   "clipEnd": 304.6,
+   "license": "CC BY-SA 3.0",
+   "shareAlike": true,
+   "attribution": "Cosmos Laundromat: First Cycle (2015) by the Blender Institute / Gooseberry Open Movie Project, gooseberry.blender.org, licensed CC BY-SA 3.0",
+   "sourcePage": "https://commons.wikimedia.org/wiki/File:Cosmos_Laundromat_-_First_Cycle_-_Official_Blender_Foundation_release.webm",
+   "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Cosmos_Laundromat_-_First_Cycle_-_Official_Blender_Foundation_release.webm/960px-seek%3D284-Cosmos_Laundromat_-_First_Cycle_-_Official_Blender_Foundation_release.webm.jpg",
+   "thumbAt": 284,
+   "characters": [
+    {
+     "id": "victor",
+     "name": "Victor",
+     "color": "#ff8a4c",
+     "voice": {
+      "engine": "kokoro",
+      "id": "am_michael",
+      "rate": 1,
+      "pitch": 1
+     }
+    },
+    {
+     "id": "franck",
+     "name": "Franck",
+     "color": "#5cc8ff",
+     "voice": {
+      "engine": "kokoro",
+      "id": "bm_george",
+      "rate": 1,
+      "pitch": 1
+     }
+    }
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "start": 265.471,
+     "end": 269.375,
+     "speaker": "victor",
+     "text": "I knew it. I knew it."
+    },
+    {
+     "id": "l2",
+     "start": 270.25,
+     "end": 272.583,
+     "speaker": "victor",
+     "text": "You will not regret this."
+    },
+    {
+     "id": "l3",
+     "start": 272.938,
+     "end": 274.583,
+     "speaker": "victor",
+     "text": "The adventures you will have,"
+    },
+    {
+     "id": "l4",
+     "start": 275.75,
+     "end": 278.958,
+     "speaker": "victor",
+     "text": "all the lives you've ever wanted,"
+    },
+    {
+     "id": "l5",
+     "start": 279.5,
+     "end": 281.625,
+     "speaker": "victor",
+     "text": "all you've been missing."
+    },
+    {
+     "id": "l6",
+     "start": 281.7,
+     "end": 286.0,
+     "speaker": "victor",
+     "text": "Here. This is the best product we have in store."
+    },
+    {
+     "id": "l7",
+     "start": 287.073,
+     "end": 289.917,
+     "speaker": "victor",
+     "text": "Variable spin speed, excellent tumble performance,"
+    },
+    {
+     "id": "l8",
+     "start": 290.0,
+     "end": 293.458,
+     "speaker": "victor",
+     "text": "in one... handy... device. Squeaky clean!"
+    },
+    {
+     "id": "l9",
+     "start": 297.0,
+     "end": 300.25,
+     "speaker": "franck",
+     "text": "Well, this... this better be good."
+    },
+    {
+     "id": "l10",
+     "start": 301.311,
+     "end": 303.917,
+     "speaker": "franck",
+     "text": "Took me ages to tie that rope."
+    }
+   ]
+  },
+  {
+   "id": "sprite-fright-welcome-friends",
+   "title": "Sprite Fright: Welcome, Friends",
+   "film": "Sprite Fright (2021)",
+   "style": "animation",
+   "difficulty": "medium",
+   "videoUrl": "https://upload.wikimedia.org/wikipedia/commons/transcoded/7/76/Sprite_Fright_-_Blender_Open_Movie-full_movie.webm/Sprite_Fright_-_Blender_Open_Movie-full_movie.webm.480p.vp9.webm",
+   "videoBytes": 55911672,
+   "clipStart": 195.5,
+   "clipEnd": 236.5,
+   "license": "CC BY 4.0",
+   "shareAlike": false,
+   "attribution": "Sprite Fright (2021) by Blender Studio, studio.blender.org, licensed CC BY 4.0",
+   "sourcePage": "https://commons.wikimedia.org/wiki/File:Sprite_Fright_-_Blender_Open_Movie-full_movie.webm",
+   "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Sprite_Fright_-_Blender_Open_Movie-full_movie.webm/960px-seek%3D217-Sprite_Fright_-_Blender_Open_Movie-full_movie.webm.jpg",
+   "thumbAt": 217,
+   "characters": [
+    {
+     "id": "elder",
+     "name": "Sprite Elder",
+     "color": "#ff8a4c",
+     "voice": {
+      "engine": "kokoro",
+      "id": "bm_lewis",
+      "rate": 1,
+      "pitch": 1
+     }
+    },
+    {
+     "id": "rex",
+     "name": "Rex",
+     "color": "#5cc8ff",
+     "voice": {
+      "engine": "kokoro",
+      "id": "am_fenrir",
+      "rate": 1,
+      "pitch": 1
+     }
+    },
+    {
+     "id": "ellie",
+     "name": "Ellie",
+     "color": "#c79bff",
+     "voice": {
+      "engine": "kokoro",
+      "id": "af_sarah",
+      "rate": 1,
+      "pitch": 1
+     }
+    }
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "start": 195.917,
+     "end": 197.5,
+     "speaker": "elder",
+     "text": "Greetings."
+    },
+    {
+     "id": "l2",
+     "start": 197.5,
+     "end": 199.0,
+     "speaker": "elder",
+     "text": "Welcome, friends."
+    },
+    {
+     "id": "l3",
+     "start": 199.0,
+     "end": 201.208,
+     "speaker": "elder",
+     "text": "I’ll be right down."
+    },
+    {
+     "id": "l4",
+     "start": 206.25,
+     "end": 208.75,
+     "speaker": "elder",
+     "text": "Could I interest you in some peppermint tea?"
+    },
+    {
+     "id": "l5",
+     "start": 208.75,
+     "end": 210.667,
+     "speaker": "rex",
+     "text": "What are you guys?"
+    },
+    {
+     "id": "l6",
+     "start": 210.667,
+     "end": 214.417,
+     "speaker": "elder",
+     "text": "We are sprites. We sprite balance to the forest."
+    },
+    {
+     "id": "l7",
+     "start": 214.417,
+     "end": 219.667,
+     "speaker": "elder",
+     "text": "We take care of the animals, plants, birds, moss…"
+    },
+    {
+     "id": "l8",
+     "start": 221.0,
+     "end": 223.917,
+     "speaker": "ellie",
+     "text": "Guys? Guys, I…"
+    },
+    {
+     "id": "l9",
+     "start": 226.583,
+     "end": 231.542,
+     "speaker": "rex",
+     "text": "Hey, uh, little mushroom geezer, you cool with us camping here for the night?"
+    },
+    {
+     "id": "l10",
+     "start": 231.542,
+     "end": 236.333,
+     "speaker": "elder",
+     "text": "Absolutely. A friend of the forest is a friend of the sprites."
+    }
+   ]
+  },
+  {
+   "id": "tos-breakup",
+   "title": "Tears of Steel: You're a Jerk, Thom",
+   "film": "Tears of Steel (2012)",
+   "style": "live",
+   "difficulty": "easy",
+   "videoUrl": "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/cb/Tears_of_Steel_1080p.webm/Tears_of_Steel_1080p.webm.480p.vp9.webm",
+   "videoBytes": 91689597,
+   "clipStart": 20.5,
+   "clipEnd": 46.5,
+   "license": "CC BY 3.0",
+   "shareAlike": false,
+   "attribution": "Tears of Steel (2012) by the Blender Foundation / Mango Open Movie Project, mango.blender.org, licensed CC BY 3.0",
+   "sourcePage": "https://commons.wikimedia.org/wiki/File:Tears_of_Steel_1080p.webm",
+   "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Tears_of_Steel_1080p.webm/960px-seek%3D32-Tears_of_Steel_1080p.webm.jpg",
+   "thumbAt": 32,
+   "characters": [
+    {
+     "id": "celia",
+     "name": "Celia",
+     "color": "#ff8a4c",
+     "voice": {
+      "engine": "kokoro",
+      "id": "af_heart",
+      "rate": 1,
+      "pitch": 1
+     }
+    },
+    {
+     "id": "thom",
+     "name": "Thom",
+     "color": "#5cc8ff",
+     "voice": {
+      "engine": "kokoro",
+      "id": "am_puck",
+      "rate": 1,
+      "pitch": 1
+     }
+    }
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "start": 23.0,
+     "end": 24.5,
+     "speaker": "celia",
+     "text": "You're a jerk, Thom."
+    },
+    {
+     "id": "l2",
+     "start": 25.0,
+     "end": 27.0,
+     "speaker": "thom",
+     "text": "Look Celia, we have to follow our passions;"
+    },
+    {
+     "id": "l3",
+     "start": 27.0,
+     "end": 30.5,
+     "speaker": "thom",
+     "text": "...you have your robotics, and I just want to be awesome in space."
+    },
+    {
+     "id": "l4",
+     "start": 30.8,
+     "end": 34.0,
+     "speaker": "celia",
+     "text": "Why don't you just admit that you're freaked out by my robot hand?"
+    },
+    {
+     "id": "l5",
+     "start": 34.5,
+     "end": 36.0,
+     "speaker": "thom",
+     "text": "I'm not freaked out by- it's..."
+    },
+    {
+     "id": "l6",
+     "start": 37.0,
+     "end": 38.0,
+     "speaker": "thom",
+     "text": "...alright! Fine!"
+    },
+    {
+     "id": "l7",
+     "start": 38.0,
+     "end": 41.0,
+     "speaker": "thom",
+     "text": "I'm freaked out! I have nightmares that I'm being chased..."
+    },
+    {
+     "id": "l8",
+     "start": 41.0,
+     "end": 42.0,
+     "speaker": "thom",
+     "text": "...by these giant robotic claws of death..."
+    },
+    {
+     "id": "l9",
+     "start": 43.0,
+     "end": 45.0,
+     "speaker": "celia",
+     "text": "Whatever, Thom. We're done."
+    }
+   ]
+  },
+  {
+   "id": "tos-broken-heart",
+   "title": "Tears of Steel: You Broke My Heart",
+   "film": "Tears of Steel (2012)",
+   "style": "live",
+   "difficulty": "easy",
+   "videoUrl": "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/cb/Tears_of_Steel_1080p.webm/Tears_of_Steel_1080p.webm.480p.vp9.webm",
+   "videoBytes": 91689597,
+   "clipStart": 382.6,
+   "clipEnd": 409.6,
+   "license": "CC BY 3.0",
+   "shareAlike": false,
+   "attribution": "Tears of Steel (2012) by the Blender Foundation / Mango Open Movie Project, mango.blender.org, licensed CC BY 3.0",
+   "sourcePage": "https://commons.wikimedia.org/wiki/File:Tears_of_Steel_1080p.webm",
+   "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Tears_of_Steel_1080p.webm/960px-seek%3D396-Tears_of_Steel_1080p.webm.jpg",
+   "thumbAt": 396,
+   "characters": [
+    {
+     "id": "celia",
+     "name": "Celia",
+     "color": "#ff8a4c",
+     "voice": {
+      "engine": "kokoro",
+      "id": "af_heart",
+      "rate": 1,
+      "pitch": 1
+     }
+    },
+    {
+     "id": "thom",
+     "name": "Thom",
+     "color": "#5cc8ff",
+     "voice": {
+      "engine": "kokoro",
+      "id": "am_puck",
+      "rate": 1,
+      "pitch": 1
+     }
+    }
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "start": 383.0,
+     "end": 385.0,
+     "speaker": "celia",
+     "text": "You broke my heart."
+    },
+    {
+     "id": "l2",
+     "start": 386.0,
+     "end": 387.0,
+     "speaker": "thom",
+     "text": "I know."
+    },
+    {
+     "id": "l3",
+     "start": 387.0,
+     "end": 389.0,
+     "speaker": "celia",
+     "text": "You forgot me on earth."
+    },
+    {
+     "id": "l4",
+     "start": 389.0,
+     "end": 390.0,
+     "speaker": "thom",
+     "text": "I know."
+    },
+    {
+     "id": "l5",
+     "start": 390.5,
+     "end": 393.0,
+     "speaker": "celia",
+     "text": "I should just crush you."
+    },
+    {
+     "id": "l6",
+     "start": 396.0,
+     "end": 397.0,
+     "speaker": "thom",
+     "text": "I'm-"
+    },
+    {
+     "id": "l7",
+     "start": 407.0,
+     "end": 408.0,
+     "speaker": "thom",
+     "text": "I'm sorry."
+    }
+   ]
+  }
+ ]
+}

@@ -2,29 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DubDojo</title>
-  <meta name="description" content="DubDojo: dub movie, series and anime scenes with your own voice, get timing scores, and play branching voiced stories.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1020">
+  <title>DubDojo · Dub anime &amp; movie scenes with your own voice</title>
+  <meta name="description" content="DubDojo is a free dubbing game in your browser. Pick a scene, record each line with your own voice, get a sync score and download your dub.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='2' y='2' width='44' height='44' rx='13' fill='%23ff7a3d'/%3E%3Cpath d='M33.5 14.5A13 13 0 1 0 37 24' fill='none' stroke='%230b1020' stroke-width='4.2' stroke-linecap='round'/%3E%3Cpath d='M18 21v6M22.5 17.5v13M27 20v8M31 23v2' stroke='%230b1020' stroke-width='2.8' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="scenes.css">
 </head>
 <body>
-  <header class="top">
-    <h1><span class="logo">🎬</span> DubDojo</h1>
-    <nav id="tabs">
-      <button data-tab="scenes">🎬 Dub Scenes</button>
-      <span class="nav-group" aria-hidden="true">Story mode</span>
-      <button data-tab="play">▶ Play</button>
-      <button data-tab="dub">● Dub</button>
-      <button data-tab="edit">✎ Edit</button>
-      <button data-tab="packs">📦 Voice Packs</button>
+  <a class="skip-link" href="#view">Skip to content</a>
+  <header class="top" id="top">
+    <a class="brand" href="#/" aria-label="DubDojo home"><span class="brand-mark"></span><span class="brand-name">Dub<b>Dojo</b></span></a>
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav"></button>
+    <nav id="nav" aria-label="Main">
+      <a href="#/" data-nav="home">Play</a>
+      <a href="#/packs" data-nav="packs">Packs</a>
+      <a href="#/make" data-nav="make">Make a pack</a>
+      <a href="#/story" data-nav="story">Story mode</a>
     </nav>
   </header>
-  <main id="view"></main>
+  <main id="view" tabindex="-1"></main>
   <div id="toast" role="status" aria-live="polite"></div>
   <div id="dl" hidden><span></span><i></i></div>
+  <script src="icons.js"></script>
   <script src="voices.js"></script>
   <script src="app.js"></script>
   <script src="scenes.js"></script>
+  <script src="game.js"></script>
 </body>
 </html>
